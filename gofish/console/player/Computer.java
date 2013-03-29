@@ -1,5 +1,7 @@
 package gofish.console.player;
 
+import gofish.exception.NoCardsLeftException;
+import gofish.exception.NoOtherPlayersException;
 import gofish.Game;
 import gofish.model.Card;
 import gofish.model.CardsCollection;
@@ -17,7 +19,7 @@ public class Computer extends Player {
     }
 
     @Override
-    public Query getQuery(Game game) {
+    public Query getQuery(Game game) throws NoCardsLeftException {
         List<Player> otherPlayers = otherPlayers(game.getPlayers());
         Player playerAsked = getPlayerAsked(otherPlayers);
         String cardName = getCardName(game);
@@ -26,24 +28,27 @@ public class Computer extends Player {
     
     private Player getPlayerAsked(List<Player> players) {
         int numPlayers = players.size();
-        if (numPlayers > 0) {
-            int randomIndex = randomGenerator.nextInt(numPlayers);
-            return players.get(randomIndex);
+        if (numPlayers == 0) {
+            throw new NoOtherPlayersException();
         }
-        return null;
+        int randomIndex = randomGenerator.nextInt(numPlayers);
+        return players.get(randomIndex);
+        
     }
     
-    private String getCardName(Game game) {
+    private String getCardName(Game game) throws NoCardsLeftException {
         CardsCollection hand = getHand();
         for (String property : hand.properties()) {
             Set<Card> cards = game.findCards(property);
-            for (Card card : cards) {
-                if (!hand.contains(card)) {
-                    return card.getName();
+            if (cards.size() > hand.seriesSize(property)) {
+                for (Card card : cards) {
+                    if (!hand.contains(card)) {
+                        return card.getName();
+                    }
                 }
             }
         }
-        return null;
+        throw new NoCardsLeftException();
     }
     
 }

@@ -1,6 +1,6 @@
 package gofish.console.config;
 
-import gofish.Game;
+import gofish.Config;
 import gofish.ConfigFactory;
 import gofish.console.player.Computer;
 import gofish.console.player.Human;
@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class XmlConfig implements ConfigFactory {
+public class XMLConfig implements ConfigFactory {
     
     final private static String SCHEMA_FILE = "gofish/resources/gofish.xsd";
     
@@ -33,13 +33,13 @@ public class XmlConfig implements ConfigFactory {
     
     private Scanner input;
 
-    public XmlConfig(Scanner input) {
+    public XMLConfig(Scanner input) {
         this.input = input;
     }
 
     @Override
-    public Game.Config getConfig() {
-        Game.Config config = new Game.Config();
+    public Config getConfig() {
+        Config config = new Config();
         
         Element root = getXml();
         

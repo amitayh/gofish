@@ -2,6 +2,7 @@ package gofish.console.player;
 
 import gofish.Game;
 import gofish.console.ConsoleUtils;
+import gofish.exception.NoCardsLeftException;
 import gofish.model.Card;
 import gofish.model.Player;
 import java.util.List;
@@ -17,7 +18,7 @@ public class Human extends Player {
     }
 
     @Override
-    public Query getQuery(Game game) {
+    public Query getQuery(Game game) throws NoCardsLeftException {
         List<Player> otherPlayers = otherPlayers(game.getPlayers());
         Player playerAsked = getPlayerAsked(otherPlayers);
         String cardName = getCardName(playerAsked);
@@ -34,11 +35,16 @@ public class Human extends Player {
         return players.get(index - 1);
     }
 
-    private String getCardName(Player playerAsked) {
+    private String getCardName(Player playerAsked) throws NoCardsLeftException {
         printHand();
         System.out.println("Which card do you want from " + playerAsked.getName() + "?");
-        System.out.print("Enter card's name: ");
-        return input.nextLine();
+        System.out.print("Enter card's name (press Enter to quit game): ");
+        String cardName = input.nextLine();
+        if (cardName.isEmpty()) {
+            throw new NoCardsLeftException();
+        }
+        return cardName;
+        
     }
     
     private void printPlayers(List<Player> players) {

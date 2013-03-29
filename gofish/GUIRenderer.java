@@ -4,7 +4,7 @@ import gofish.model.Card;
 import gofish.model.Player;
 import gofish.model.Series;
 
-public interface GuiRenderer {
+public interface GUIRenderer {
     
     void startGame();
     

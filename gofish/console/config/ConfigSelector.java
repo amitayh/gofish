@@ -1,7 +1,7 @@
 package gofish.console.config;
 
+import gofish.Config;
 import gofish.ConfigFactory;
-import gofish.Game;
 import gofish.console.ConsoleUtils;
 import java.util.Scanner;
 
@@ -14,7 +14,7 @@ public class ConfigSelector implements ConfigFactory {
     private Scanner input = new Scanner(System.in);
     
     @Override
-    public Game.Config getConfig() {
+    public Config getConfig() {
         System.out.println("Choose configuration method");
         System.out.println("1. Manual");
         System.out.println("2. XML");
@@ -26,7 +26,7 @@ public class ConfigSelector implements ConfigFactory {
                 factory = new ManualConfig(input);
                 break;
             case OPTION_XML:
-                factory = new XmlConfig(input);
+                factory = new XMLConfig(input);
                 break;
             default:
                 // This should never happen

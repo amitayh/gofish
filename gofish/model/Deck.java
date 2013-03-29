@@ -22,7 +22,7 @@ public class Deck {
     public Deck() {
         for (String rank : RANKS) {
             for (String suit : SUITS) {
-                cards.add(new Card(rank + " of " + suit, rank, suit));
+                cards.add(new Card(rank + " of " + suit, rank));
             }
         }
     }

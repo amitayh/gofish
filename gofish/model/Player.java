@@ -1,6 +1,7 @@
 package gofish.model;
 
 import gofish.Game;
+import gofish.exception.NoCardsLeftException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -9,31 +10,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 abstract public class Player {
-    
-    public class Query {
-        
-        private Player playerAsked;
-        
-        private String cardName;
-
-        public Query(Player playerAsked, String cardName) {
-            this.playerAsked = playerAsked;
-            this.cardName = cardName;
-        }
-
-        public Player getPlayerAsking() {
-            return Player.this;
-        }
-
-        public Player getPlayerAsked() {
-            return playerAsked;
-        }
-
-        public String getCardName() {
-            return cardName;
-        }
-        
-    }
     
     public enum Type {COMPUTER, HUMAN};
     
@@ -91,10 +67,18 @@ abstract public class Player {
         return !hand.isEmpty();
     }
     
+    /**
+     * @return total number of cards player has (in hand and in completed series)
+     */
     public int numCards() {
-        return (hand.size() + completeSeries.size());
+        int cardsInCompletedSeries = completeSeries.size() * Game.COMPLETE_SERIES_SIZE;
+        return (hand.size() + cardsInCompletedSeries);
     }
     
+    /**
+     * @param allPlayers all players in game
+     * @return a list of other players (excluding self) that are still playing
+     */
     protected List<Player> otherPlayers(Collection<Player> allPlayers) {
         List<Player> otherPlayers = new ArrayList<>(allPlayers.size());
         for (Player player : allPlayers) {
@@ -105,10 +89,15 @@ abstract public class Player {
         return otherPlayers;
     }
     
+    /**
+     * Check if there's a complete series in hand
+     * 
+     * @return the completed series if it exists, null otherwise
+     */
     private Series checkComplete() {
         for (String property : hand.properties()) {
             if (hand.seriesSize(property) == Game.COMPLETE_SERIES_SIZE) {
-                Set<Card> cards = hand.removeSeries(property);
+                Set<Card> cards = hand.removeByProperty(property);
                 Series series = new Series(property, cards);
                 completeSeries.add(series);
                 return series;
@@ -119,9 +108,34 @@ abstract public class Player {
 
     @Override
     public String toString() {
-        return "Player " + name;
+        return "Player{type=" + type + ", name=" + name + "}";
     }
     
-    abstract public Player.Query getQuery(Game game);
+    abstract public Query getQuery(Game game) throws NoCardsLeftException;
+    
+    public class Query {
+        
+        private Player playerAsked;
+        
+        private String cardName;
+
+        public Query(Player playerAsked, String cardName) {
+            this.playerAsked = playerAsked;
+            this.cardName = cardName;
+        }
+
+        public Player getPlayerAsking() {
+            return Player.this;
+        }
+
+        public Player getPlayerAsked() {
+            return playerAsked;
+        }
+
+        public String getCardName() {
+            return cardName;
+        }
+        
+    }
 
 }

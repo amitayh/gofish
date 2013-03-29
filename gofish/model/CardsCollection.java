@@ -30,17 +30,10 @@ public class CardsCollection extends AbstractCollection<Card> {
      */
     private SetMultimap<String, Card> series = HashMultimap.create();
     
-    public void addSeries(String property, Set<Card> set) {
-        for (Card card : set) {
-            cards.put(card.getName(), card);
-            series.put(property, card);
-        }
-    }
-    
-    public Set<Card> removeSeries(String property) {
+    public Set<Card> removeByProperty(String property) {
         Set<Card> set = series.removeAll(property);
         for (Card card : set) {
-            removeCard(card);
+            removeCardFromMap(card);
         }
         return set;
     }
@@ -61,7 +54,7 @@ public class CardsCollection extends AbstractCollection<Card> {
         return cards.get(cardName);
     }
 
-    public Set<Card> getSeries(String property) {
+    public Set<Card> getByProperty(String property) {
         return series.get(property);
     }
     
@@ -75,10 +68,8 @@ public class CardsCollection extends AbstractCollection<Card> {
     
     private boolean removeCard(Card card) {
         if (containsCard(card)) {
-            cards.remove(card.getName());
-            for (String property : card.getProperties()) {
-                series.remove(property, card);
-            }
+            removeCardFromMap(card);
+            removeCardFromSeries(card);
             return true;
         }
         return false;
@@ -86,6 +77,16 @@ public class CardsCollection extends AbstractCollection<Card> {
     
     private boolean removeCard(String cardName) {
         return removeCard(cards.get(cardName));
+    }
+    
+    private void removeCardFromMap(Card card) {
+        cards.remove(card.getName());
+    }
+    
+    private void removeCardFromSeries(Card card) {
+        for (String property : card.getProperties()) {
+            series.remove(property, card);
+        }
     }
     
     @Override
@@ -118,7 +119,7 @@ public class CardsCollection extends AbstractCollection<Card> {
     
     @Override
     public Iterator<Card> iterator() {
-        return cards.values().iterator();
+        return new CardsIterator();
     }
 
     @Override
@@ -141,6 +142,36 @@ public class CardsCollection extends AbstractCollection<Card> {
     public void clear() {
         cards.clear();
         series.clear();
+    }
+    
+    public class CardsIterator implements Iterator<Card> {
+        
+        final private Iterator<Card> iterator;
+        
+        private Card lastReturned;
+
+        public CardsIterator() {
+            iterator = cards.values().iterator();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return iterator.hasNext();
+        }
+
+        @Override
+        public Card next() {
+            lastReturned = iterator.next();
+            return lastReturned;
+        }
+
+        @Override
+        public void remove() {
+            // Remove card from both cards map, and series multimap
+            removeCardFromSeries(lastReturned);
+            iterator.remove();
+        }
+        
     }
 
 }

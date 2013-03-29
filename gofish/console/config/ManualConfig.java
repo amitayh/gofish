@@ -1,11 +1,11 @@
 package gofish.console.config;
 
-import gofish.Game;
+import gofish.Config;
 import gofish.ConfigFactory;
+import gofish.Game;
 import gofish.console.ConsoleUtils;
 import gofish.console.player.Computer;
 import gofish.console.player.Human;
-import gofish.model.Card;
 import gofish.model.Deck;
 import gofish.model.Player;
 import java.util.HashSet;
@@ -25,8 +25,8 @@ public class ManualConfig implements ConfigFactory {
     }
     
     @Override
-    public Game.Config getConfig() {
-        Game.Config config = new Game.Config();
+    public Config getConfig() {
+        Config config = new Config();
         
         System.out.println("Configure game");
         
@@ -37,7 +37,7 @@ public class ManualConfig implements ConfigFactory {
         config.setForceShowOfSeries(ConsoleUtils.nextBoolean(input));
         
         System.out.print("Enter number of players: ");
-        int min = config.getMinNumPlayers(), max = config.getMaxNumPlayers();
+        int min = Game.MIN_NUM_PLAYERS, max = Game.MAX_NUM_PLAYERS;
         int numPlayers = ConsoleUtils.nextInt(input, min, max);
         
         // Create players
