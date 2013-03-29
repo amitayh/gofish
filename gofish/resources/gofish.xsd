@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="gofish">
+	<xs:complexType>
+	    <xs:sequence>		
+		<xs:element name="settings">
+		    <xs:complexType>
+			<xs:sequence>
+			    <xs:element name="allowMutipleRequests" type="xs:boolean"/>
+			    <xs:element name="forceShowOfSeries" type="xs:boolean"/>
+			</xs:sequence>
+		    </xs:complexType>
+		</xs:element>
+		<xs:element name="players">
+		    <xs:complexType>
+			<xs:sequence minOccurs="3" maxOccurs="6">
+			    <xs:element name="player" type="player"/>
+			</xs:sequence>
+		    </xs:complexType>
+		</xs:element>
+	    </xs:sequence>
+	</xs:complexType>
+    </xs:element>
+
+    <!--Settings-->
+
+    <!--	Player Definition   -->
+    <xs:complexType name="player">
+	<xs:sequence minOccurs="1" maxOccurs="1">
+	    <xs:element name="cards" type="cards"/>
+	</xs:sequence>
+	<xs:attributeGroup ref="player_details"/>
+    </xs:complexType>
+    <xs:attributeGroup name="player_details">
+	<xs:attribute name="name" type="xs:string"/>
+	<xs:attribute name="type" type="player_type"/>
+    </xs:attributeGroup>
+    <xs:simpleType name="player_type">
+	<xs:restriction base="xs:string">
+	    <xs:enumeration value="HUMAN"/>
+	    <xs:enumeration value="COMPUTER"/>
+	</xs:restriction>
+    </xs:simpleType>
+
+    <!--	Card Definition	-->
+    <xs:complexType name="cards">
+	<xs:sequence minOccurs="4" maxOccurs="24">
+	    <xs:element name="card" type="card"/>
+	</xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="card">
+	<xs:sequence minOccurs="1" maxOccurs="unbounded">
+	    <xs:element name="series" type="xs:string"/>
+	</xs:sequence>
+	<xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+</xs:schema>
