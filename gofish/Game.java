@@ -4,7 +4,6 @@ import com.google.common.collect.Iterators;
 import gofish.model.CardsCollection;
 import gofish.model.Player;
 import gofish.model.Card;
-import gofish.exception.CardCollisionException;
 import gofish.exception.GameStatusException;
 import gofish.exception.NoCardsLeftException;
 import gofish.model.Series;

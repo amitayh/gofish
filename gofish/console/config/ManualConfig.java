@@ -6,11 +6,12 @@ import gofish.Game;
 import gofish.console.ConsoleUtils;
 import gofish.console.player.Computer;
 import gofish.console.player.Human;
+import gofish.exception.PlayerCollisionException;
+import gofish.model.Card;
 import gofish.model.Deck;
 import gofish.model.Player;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
 public class ManualConfig implements ConfigFactory {
     
@@ -41,37 +42,32 @@ public class ManualConfig implements ConfigFactory {
         int numPlayers = ConsoleUtils.nextInt(input, min, max);
         
         // Create players
-        Player[] players = new Player[numPlayers];
-        Set<String> playerNames = new HashSet<>();
         for (int i = 0; i < numPlayers; i++) {
-            System.out.println("\nConfigure player #" + (i + 1));
-            Player player = getPlayer(playerNames);
-            config.addPlayer(player);
-            players[i] = player;
+            Player player;
+            do {
+                System.out.println("\nConfigure player #" + (i + 1));
+                player = getPlayer();
+                try {
+                    config.addPlayer(player);
+                } catch (PlayerCollisionException e) {
+                    System.out.println("Name '" + e.getName() +
+                                       "' is already being used!");
+                    player = null;
+                }
+            } while (player == null);
         }
         
         // Deal a stanrad 52 cards deck
-        Deck deck = new Deck();
-        deck.shuffle();
-        int playerIndex = 0;
-        while (deck.size() > 0) {
-            players[playerIndex].addCard(deck.deal());
-            playerIndex = (playerIndex + 1) % numPlayers;
-        }
+        dealCards(config.getPlayers());
         
         return config;
     }
     
-    private Player getPlayer(Set<String> playerNames) {
+    private Player getPlayer() {
         Player player = null;
         
         System.out.print("Enter player's name: ");
         String name = input.nextLine();
-        while (playerNames.contains(name)) {
-            System.out.print("'" + name + "' is already being used. Choose another name: ");
-            name = input.nextLine();
-        }
-        playerNames.add(name);
         
         System.out.println("Choose player type");
         System.out.println("1. Computer");
@@ -87,6 +83,19 @@ public class ManualConfig implements ConfigFactory {
         }
         
         return player;
+    }
+    
+    private void dealCards(List<Player> players) {
+        Deck deck = new Deck();
+        deck.shuffle();
+        
+        int index = 0;
+        while (deck.size() > 0) {
+            Player player = players.get(index);
+            Card card = deck.deal();
+            player.addCard(card);
+            index = (index + 1) % players.size();
+        }
     }
 
 }

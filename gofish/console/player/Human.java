@@ -44,7 +44,6 @@ public class Human extends Player {
             throw new NoCardsLeftException();
         }
         return cardName;
-        
     }
     
     private void printPlayers(List<Player> players) {
