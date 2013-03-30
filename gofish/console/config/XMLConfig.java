@@ -131,13 +131,16 @@ public class XMLConfig implements ConfigFactory {
     private Player getPlayer(Element playerElement) {
         Player player = null;
         String name = playerElement.getAttribute("name");
-        switch (playerElement.getAttribute("type")) {
+        String type = playerElement.getAttribute("type");
+        switch (type) {
             case TYPE_COMPUTER:
                 player = new Computer(name);
                 break;
             case TYPE_HUMAN:
                 player = new Human(input, name);
                 break;
+            default:
+                throw new ConfigValidationException("Unexpected player type - " + type);
         }
         
         if (player != null) {

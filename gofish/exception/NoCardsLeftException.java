@@ -1,6 +1,6 @@
 package gofish.exception;
 
-public class NoCardsLeftException extends Exception {
+public class NoCardsLeftException extends PlayerQueryException {
 
     public NoCardsLeftException() {
         super();

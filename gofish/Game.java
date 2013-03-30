@@ -5,7 +5,7 @@ import gofish.model.CardsCollection;
 import gofish.model.Player;
 import gofish.model.Card;
 import gofish.exception.GameStatusException;
-import gofish.exception.NoCardsLeftException;
+import gofish.exception.PlayerQueryException;
 import gofish.model.Series;
 import java.util.Collections;
 import java.util.Comparator;
@@ -193,7 +193,7 @@ public class Game {
             }
             renderer.playerQuery(query);
             return query;
-        } catch (NoCardsLeftException e) {
+        } catch (PlayerQueryException e) {
             return null;
         }
     }

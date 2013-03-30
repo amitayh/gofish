@@ -1,8 +1,8 @@
 package gofish.console.player;
 
 import gofish.exception.NoCardsLeftException;
-import gofish.exception.NoOtherPlayersException;
 import gofish.Game;
+import gofish.exception.PlayerQueryException;
 import gofish.model.Card;
 import gofish.model.CardsCollection;
 import gofish.model.Player;
@@ -19,7 +19,7 @@ public class Computer extends Player {
     }
 
     @Override
-    public Query getQuery(Game game) throws NoCardsLeftException {
+    public Query getQuery(Game game) throws PlayerQueryException {
         List<Player> otherPlayers = otherPlayers(game.getPlayers());
         Player playerAsked = getPlayerAsked(otherPlayers);
         String cardName = getCardName(game);
@@ -27,13 +27,8 @@ public class Computer extends Player {
     }
     
     private Player getPlayerAsked(List<Player> players) {
-        int numPlayers = players.size();
-        if (numPlayers == 0) {
-            throw new NoOtherPlayersException();
-        }
-        int randomIndex = randomGenerator.nextInt(numPlayers);
+        int randomIndex = randomGenerator.nextInt(players.size());
         return players.get(randomIndex);
-        
     }
     
     private String getCardName(Game game) throws NoCardsLeftException {

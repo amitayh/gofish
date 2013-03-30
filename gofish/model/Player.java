@@ -1,7 +1,8 @@
 package gofish.model;
 
 import gofish.Game;
-import gofish.exception.NoCardsLeftException;
+import gofish.exception.NoOtherPlayersException;
+import gofish.exception.PlayerQueryException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -79,12 +80,15 @@ abstract public class Player implements Cloneable {
      * @param allPlayers all players in game
      * @return a list of other players (excluding self) that are still playing
      */
-    protected List<Player> otherPlayers(Collection<Player> allPlayers) {
+    protected List<Player> otherPlayers(Collection<Player> allPlayers) throws NoOtherPlayersException {
         List<Player> otherPlayers = new ArrayList<>(allPlayers.size());
         for (Player player : allPlayers) {
             if (player != this && player.canPlay()) {
                 otherPlayers.add(player);
             }
+        }
+        if (otherPlayers.isEmpty()) {
+            throw new NoOtherPlayersException();
         }
         return otherPlayers;
     }
@@ -126,7 +130,7 @@ abstract public class Player implements Cloneable {
         return clone;
     }
     
-    abstract public Query getQuery(Game game) throws NoCardsLeftException;
+    abstract public Query getQuery(Game game) throws PlayerQueryException;
     
     public class Query {
         
