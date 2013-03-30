@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-abstract public class Player {
+abstract public class Player implements Cloneable {
     
     public enum Type {COMPUTER, HUMAN};
     
@@ -112,6 +112,21 @@ abstract public class Player {
     }
     
     abstract public Query getQuery(Game game) throws NoCardsLeftException;
+    
+    @Override
+    public Player clone() {
+        Player clone;
+        
+        try {
+            clone = (Player) super.clone();
+            clone.hand = new CardsCollection(hand);
+            clone.completeSeries = new LinkedList<>(completeSeries);
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        
+        return clone;
+    }
     
     public class Query {
         

@@ -11,7 +11,11 @@ public class ConfigSelector implements ConfigFactory {
     
     final private static int OPTION_XML = 2;
     
-    private Scanner input = new Scanner(System.in);
+    private Scanner input;
+
+    public ConfigSelector(Scanner input) {
+        this.input = input;
+    }
     
     @Override
     public Config getConfig() {

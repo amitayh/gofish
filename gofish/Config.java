@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Config {
+public class Config implements Cloneable {
     
     private boolean allowMutipleRequests = true;
     
@@ -64,6 +64,19 @@ public class Config {
         if (numCards < Game.MIN_NUM_CARDS) {
             throw new TooFewCardsException();
         }
+    }
+    
+    @Override
+    public Config clone() {
+        Config clone = new Config();
+        
+        clone.allowMutipleRequests = allowMutipleRequests;
+        clone.forceShowOfSeries = forceShowOfSeries;
+        for (Player player : players) {
+            clone.addPlayer(player.clone());
+        }
+        
+        return clone;
     }
 
 }

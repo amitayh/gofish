@@ -1,22 +1,19 @@
 package gofish;
 
-import gofish.console.config.ConfigSelector;
+import gofish.console.ConsoleGame;
 import gofish.console.ConsoleRenderer;
+import java.util.Scanner;
 
 public class GoFish {
 
-    public static void main(String[] args) throws Exception {
-        // Console renderer
+    public static void main(String[] args) {
         GUIRenderer renderer = new ConsoleRenderer();
         try {
-            ConfigFactory configFactory = new ConfigSelector();
-            Config config = configFactory.getConfig();
-            Game game = new Game(renderer, config);
-            // Start game
-            game.start();
+            Scanner input = new Scanner(System.in);
+            ConsoleGame game = new ConsoleGame(renderer, input);
+            game.run();
         } catch (Exception e) {
             renderer.error(e.getMessage());
-            throw e; // TODO - remove this (debug only)
         }
     }
     

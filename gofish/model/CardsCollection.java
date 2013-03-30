@@ -3,6 +3,7 @@ package gofish.model;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import java.util.AbstractCollection;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,15 @@ public class CardsCollection extends AbstractCollection<Card> {
      * - Spades => [Card #2]
      */
     private SetMultimap<String, Card> series = HashMultimap.create();
+
+    public CardsCollection() {
+        super();
+    }
+
+    public CardsCollection(Collection<Card> c) {
+        this();
+        addAll(c);
+    }
     
     public Set<Card> removeByProperty(String property) {
         Set<Card> set = series.removeAll(property);
