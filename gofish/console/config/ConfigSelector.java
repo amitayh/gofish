@@ -5,6 +5,10 @@ import gofish.ConfigFactory;
 import gofish.console.ConsoleUtils;
 import java.util.Scanner;
 
+/**
+ * Select between 2 configuration methods - manual and XML.
+ * The getConfig() method will be delegated to another ConfigFactory
+ */
 public class ConfigSelector implements ConfigFactory {
     
     final private static int OPTION_MANUAL = 1;
@@ -34,7 +38,7 @@ public class ConfigSelector implements ConfigFactory {
                 break;
             default:
                 // This should never happen
-                return null;
+                throw new RuntimeException("Unexpected input");
         }
         
         System.out.println();

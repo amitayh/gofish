@@ -4,6 +4,7 @@ import gofish.Config;
 import gofish.ConfigFactory;
 import gofish.console.player.Computer;
 import gofish.console.player.Human;
+import gofish.exception.ConfigValidationException;
 import gofish.model.Card;
 import gofish.model.Player;
 import java.io.File;
@@ -39,6 +40,20 @@ public class XMLConfig implements ConfigFactory {
 
     @Override
     public Config getConfig() {
+        Config config = null;
+        
+        do {            
+            try {
+                config = getConfigAndValidate();
+            } catch (ConfigValidationException e) {
+                System.out.println("Invalid config file - " + e.getMessage());
+            }
+        } while (config == null);
+        
+        return config;
+    }
+    
+    private Config getConfigAndValidate() {
         Config config = new Config();
         
         Element root = getXml();
@@ -64,6 +79,8 @@ public class XMLConfig implements ConfigFactory {
                 config.addPlayer(player);
             }
         }
+        
+        config.validate();
         
         return config;
     }

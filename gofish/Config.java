@@ -1,9 +1,11 @@
 package gofish;
 
+import gofish.exception.CardCollisionException;
 import gofish.exception.PlayerCollisionException;
 import gofish.exception.TooFewCardsException;
 import gofish.exception.TooFewPlayersException;
 import gofish.exception.TooManyPlayersException;
+import gofish.model.Card;
 import gofish.model.Player;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,8 +43,9 @@ public class Config implements Cloneable {
         if (playerNames.contains(name)) {
             throw new PlayerCollisionException(name);
         }
-        if (players.size() == Game.MAX_NUM_PLAYERS) {
-            throw new TooManyPlayersException();
+        int numPlayers = players.size();
+        if (numPlayers == Game.MAX_NUM_PLAYERS) {
+            throw new TooManyPlayersException(Game.MAX_NUM_PLAYERS, numPlayers);
         }
         players.add(player);
         playerNames.add(name);
@@ -52,17 +55,25 @@ public class Config implements Cloneable {
         return players;
     }
 
-    public void check() {
-        if (players.size() < Game.MIN_NUM_PLAYERS) {
-            throw new TooFewPlayersException();
+    public void validate() {
+        int numPlayers = players.size();
+        if (numPlayers < Game.MIN_NUM_PLAYERS) {
+            throw new TooFewPlayersException(Game.MIN_NUM_PLAYERS, numPlayers);
         }
-        // Count all cards
+        // Count cards and check name collisions
         int numCards = 0;
+        Set<String> cardNames = new HashSet<>();
         for (Player player : players) {
+            for (Card card : player.getHand()) {
+                String name = card.getName();
+                if (!cardNames.add(name)) {
+                    throw new CardCollisionException(name);
+                }
+            }
             numCards += player.numCards();
         }
         if (numCards < Game.MIN_NUM_CARDS) {
-            throw new TooFewCardsException();
+            throw new TooFewCardsException(Game.MIN_NUM_CARDS, numCards);
         }
     }
     

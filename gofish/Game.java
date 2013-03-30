@@ -15,6 +15,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Game engine
+ */
 public class Game {
     
     final public static int COMPLETE_SERIES_SIZE = 4;
@@ -58,7 +61,7 @@ public class Game {
         if (status != Status.PENDING) {
             throw new GameStatusException("Game already started");
         }
-        config.check();
+        config.validate();
         
         // Start game
         status = Status.STARTED;
@@ -133,9 +136,6 @@ public class Game {
     private void setAvailableCards() {
         for (Player player : config.getPlayers()) {
             for (Card card : player.getHand()) {
-                if (availableCards.contains(card)) {
-                    throw new CardCollisionException(card.getName());
-                }
                 availableCards.add(card);
             }
         }

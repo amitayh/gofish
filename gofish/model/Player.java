@@ -111,8 +111,6 @@ abstract public class Player implements Cloneable {
         return "Player{type=" + type + ", name=" + name + "}";
     }
     
-    abstract public Query getQuery(Game game) throws NoCardsLeftException;
-    
     @Override
     public Player clone() {
         Player clone;
@@ -127,6 +125,8 @@ abstract public class Player implements Cloneable {
         
         return clone;
     }
+    
+    abstract public Query getQuery(Game game) throws NoCardsLeftException;
     
     public class Query {
         

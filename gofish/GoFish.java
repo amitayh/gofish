@@ -1,18 +1,15 @@
 package gofish;
 
 import gofish.console.ConsoleGame;
-import gofish.console.ConsoleRenderer;
-import java.util.Scanner;
 
 public class GoFish {
 
     public static void main(String[] args) {
-        GUIRenderer renderer = new ConsoleRenderer();
+        ConsoleGame game = new ConsoleGame();
         try {
-            Scanner input = new Scanner(System.in);
-            ConsoleGame game = new ConsoleGame(renderer, input);
             game.run();
         } catch (Exception e) {
+            GUIRenderer renderer = game.getRenderer();
             renderer.error(e.getMessage());
         }
     }
