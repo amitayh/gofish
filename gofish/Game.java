@@ -4,91 +4,33 @@ import com.google.common.collect.Iterators;
 import gofish.model.CardsCollection;
 import gofish.model.Player;
 import gofish.model.Card;
-import gofish.exception.CardCollisionException;
 import gofish.exception.GameStatusException;
-import gofish.exception.PlayerCollisionException;
-import gofish.exception.TooFewCardsException;
-import gofish.exception.TooFewPlayersException;
-import gofish.exception.TooManyPlayersException;
+import gofish.exception.PlayerQueryException;
 import gofish.model.Series;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Game engine
+ */
 public class Game {
-    
-    public static class Config {
-        
-        private int minNumPlayers = DEFAULT_MIN_NUM_PLAYERS;
-        
-        private int maxNumPlayers = DEFAULT_MAX_NUM_PLAYERS;
-        
-        private int minNumCards = DEFAULT_MIN_NUM_CARDS;
-        
-        private boolean allowMutipleRequests = true;
-        
-        private boolean forceShowOfSeries = true;
-        
-        private List<Player> players = new ArrayList<>();
-        
-        private Set<String> playerNames = new HashSet<>();
-
-        public void setAllowMutipleRequests(boolean flag) {
-            allowMutipleRequests = flag;
-        }
-        
-        public void setForceShowOfSeries(boolean flag) {
-            forceShowOfSeries = flag;
-        }
-        
-        public void addPlayer(Player player) {
-            String name = player.getName();
-            if (playerNames.contains(name)) {
-                throw new PlayerCollisionException(name);
-            }
-            if (players.size() == maxNumPlayers) {
-                throw new TooManyPlayersException();
-            }
-            players.add(player);
-            playerNames.add(name);
-        }
-        
-        public int getMinNumPlayers() {
-            return minNumPlayers;
-        }
-
-        public int getMaxNumPlayers() {
-            return maxNumPlayers;
-        }
-        
-        public void check() {
-            if (players.size() < minNumPlayers) {
-                throw new TooFewPlayersException();
-            }
-            // Count all cards
-            int numCards = 0;
-            for (Player player : players) {
-                numCards += player.numCards();
-            }
-            if (numCards < minNumCards) {
-                throw new TooFewCardsException();
-            }
-        }
-        
-    }
     
     final public static int COMPLETE_SERIES_SIZE = 4;
     
-    final private static int DEFAULT_MIN_NUM_PLAYERS = 3;
+    final public static int MIN_NUM_PLAYERS = 3;
         
-    final private static int DEFAULT_MAX_NUM_PLAYERS = 6;
+    final public static int MAX_NUM_PLAYERS = 6;
 
-    final private static int DEFAULT_MIN_NUM_CARDS = 24;
+    final public static int MIN_NUM_CARDS = 24;
+    
+    /**
+     * Used to determine who's the winner
+     */
+    final private static Comparator<Player> comparator = new PlayerSeriesComparator();
     
     public enum Status {PENDING, STARTED, ENDED};
     
@@ -96,56 +38,37 @@ public class Game {
     
     private Config config;
      
-    private GuiRenderer renderer;
+    private GUIRenderer renderer;
     
     /**
-     * Map containing all cards still available in the game (don't belong to complete series)
+     * Map containing all cards still available in the game
+     * (don't belong to complete series)
      */
     private CardsCollection availableCards = new CardsCollection();
     
-    public Game(GuiRenderer renderer, Config config) {
+    public Game(GUIRenderer renderer, Config config) {
         this.renderer = renderer;
         this.config = config;
     }
 
     public List<Player> getPlayers() {
-        return config.players;
+        return config.getPlayers();
     }
     
     public void start() {
-        // Check status config
+        // Check status and config
         if (status != Status.PENDING) {
             throw new GameStatusException("Game already started");
         }
-        config.check();
+        config.validate();
         
         // Start game
         status = Status.STARTED;
         renderer.startGame();
         setAvailableCards();
         
-        // Create a temp list to cycle
-        List<Player> players = new LinkedList<>(config.players);
-        Iterator<Player> iterator = Iterators.cycle(players);
-        while (iterator.hasNext()) {
-            Player player = iterator.next();
-            
-            // Play while player has more turns
-            boolean continuePlaying = true;
-            while (continuePlaying) {
-                continuePlaying = playTurn(player);
-            }
-            
-            // Check if player is still in the game
-            if (!player.canPlay()) {
-                renderer.playerOut(player);
-                iterator.remove();
-            }
-            
-            if (players.size() == 1 || gameOver()) {
-                break;
-            }
-        }
+        // Main game loop
+        loop();
         
         // End game
         end();
@@ -160,58 +83,85 @@ public class Game {
     }
     
     public Set<Card> findCards(String property) {
-        return availableCards.getSeries(property);
+        return availableCards.getByProperty(property);
     }
     
-    private boolean gameOver() {
-        for (String property : availableCards.properties()) {
-            if (availableCards.seriesSize(property) >= COMPLETE_SERIES_SIZE) {
-                return false;
+    private void loop() {
+        // Create a temp list to cycle
+        List<Player> players = new LinkedList<>(config.getPlayers());
+        Iterator<Player> iterator = Iterators.cycle(players);
+        while (iterator.hasNext()) {
+            Player player = iterator.next();
+            
+            // Play while player has more turns
+            while (playTurn(player)) {
+                continue;
+            }
+            
+            // Check if player is still in the game
+            if (!player.canPlay()) {
+                renderer.playerOut(player);
+                iterator.remove();
+            }
+            
+            if (players.size() == 1 || !canPlay()) {
+                // One player is left or no more series can be assembled
+                break;
             }
         }
-        return true;
     }
     
-    private Player getWinner() {
-        return Collections.max(config.players, new Comparator<Player>() {
-            @Override
-            public int compare(Player p1, Player p2) {
-                return p1.getCompleteSeries().size() - p2.getCompleteSeries().size();
+    private boolean canPlay() {
+        for (String property : availableCards.properties()) {
+            if (availableCards.seriesSize(property) >= COMPLETE_SERIES_SIZE) {
+                // There are still cards that can form a series
+                return true;
             }
-        });
+        }
+        return false;
+    }
+    
+    /**
+     * @return player with most completed series (if there are more than one with
+     *         the same number of series, one of them will be chosen arbitrarily)
+     */
+    private Player getWinner() {
+        return Collections.max(config.getPlayers(), comparator);
     }
     
     /**
      * Get all cards in game - collect from players
      */
     private void setAvailableCards() {
-        for (Player player : config.players) {
-            for (Card card : player.getHand()) {
-                if (availableCards.contains(card)) {
-                    throw new CardCollisionException(card.getName());
-                }
-                availableCards.add(card);
-            }
+        for (Player player : config.getPlayers()) {
+            availableCards.addAll(player.getHand());
         }
     }
     
     /**
      * Play a single turn
      * 
-     * @param player 
+     * @param player player who's playing
      * @return true if the player gets another turn, false otherwise
      */
     private boolean playTurn(Player player) {
         if (player.canPlay()) {
             renderer.playerTurn(player);
 
-            if (config.forceShowOfSeries) {
+            if (config.getForceShowOfSeries()) {
                 // Reveal completed series
                 renderer.showSeries(player);
             }
 
             // Get player's query (ask for specific player and card)
             Player.Query query = getQuery(player);
+            if (query == null) {
+                // Player is out of the game
+                CardsCollection hand = player.getHand();
+                availableCards.removeAll(hand);
+                hand.clear();
+                return false;
+            }
 
             // Check if player being asked has the requested card
             Player playerAsked = query.getPlayerAsked();
@@ -221,7 +171,7 @@ public class Game {
                 // Give away card
                 moveCard(playerAsked, player, card);
                 // Another turn?
-                return config.allowMutipleRequests;
+                return config.getAllowMutipleRequests();
             } else {
                 // Go fish
                 renderer.goFish(player);
@@ -232,14 +182,18 @@ public class Game {
     }
     
     private Player.Query getQuery(Player player) {
-        Player.Query query = player.getQuery(this);
-        while (!validateQuery(query)) {
-            // Make sure query is valid
-            renderer.invalidQuery(query);
-            query = player.getQuery(this);
+        try {
+            Player.Query query = player.getQuery(this);
+            while (!validateQuery(query)) {
+                // Make sure query is valid
+                renderer.invalidQuery(query);
+                query = player.getQuery(this);
+            }
+            renderer.playerQuery(query);
+            return query;
+        } catch (PlayerQueryException e) {
+            return null;
         }
-        renderer.playerQuery(query);
-        return query;
     }
     
     private boolean validateQuery(Player.Query query) {
@@ -249,9 +203,9 @@ public class Game {
         if (card != null) {
             // Check that the player is allowed to ask for this card
             Player player = query.getPlayerAsking();
-            CardsCollection incomplete = player.getHand();
+            CardsCollection hand = player.getHand();
             for (String property : card.getProperties()) {
-                if (incomplete.hasSeries(property)) {
+                if (hand.hasSeries(property)) {
                     result = true;
                     break;
                 }
@@ -266,11 +220,19 @@ public class Game {
         Series series = to.addCard(card);
         if (series != null) {
             // Card completed a series
-            for (Card cardInSeries : series.getCards()) {
-                availableCards.remove(cardInSeries);
-            }
+            availableCards.removeAll(series.getCards());
             renderer.seriesCompleted(to, series);
         }
+    }
+    
+    private static class PlayerSeriesComparator implements Comparator<Player> {
+        
+        @Override
+        public int compare(Player p1, Player p2) {
+            // Compare players by number of completed series
+            return p1.getCompleteSeries().size() - p2.getCompleteSeries().size();
+        }
+        
     }
 
 }

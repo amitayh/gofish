@@ -20,8 +20,7 @@ public class Card {
     }
     
     public Card(String name, Collection<String> properties) {
-        this.name = name;
-        this.properties = properties.toArray(new String[properties.size()]);
+        this(name, properties.toArray(new String[properties.size()]));
     }
     
     public String getName() {
@@ -34,7 +33,7 @@ public class Card {
 
     @Override
     public String toString() {
-        return "Card " + name;
+        return "Card{name=" + name + "}";
     }
 
     @Override

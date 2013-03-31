@@ -1,13 +1,13 @@
-package gofish.console.gui;
+package gofish.console;
 
 import gofish.model.Card;
 import gofish.model.Player;
-import gofish.GuiRenderer;
+import gofish.GUIRenderer;
 import gofish.model.Series;
+import java.io.IOException;
 import java.util.Collection;
-import java.util.Set;
 
-public class Renderer implements GuiRenderer {
+public class ConsoleRenderer implements GUIRenderer {
 
     @Override
     public void startGame() {
@@ -16,7 +16,9 @@ public class Renderer implements GuiRenderer {
     
     @Override
     public void endGame(Player winner) {
-        System.out.println("Game ended! Winner is " + winner.getName());
+        int numCompleteSeries = winner.getCompleteSeries().size();
+        System.out.println("Game ended! Winner is " + winner.getName() +
+                           " with " + numCompleteSeries + " complete series");
     }
 
     @Override
@@ -24,10 +26,10 @@ public class Renderer implements GuiRenderer {
         System.out.print(player.getName() + " is playing");
         if (player.getType() == Player.Type.COMPUTER) {
             System.out.print(" (press Enter to continue)");
-//            try {
-//                // Wait for user input
-//                System.in.read();
-//            } catch (IOException e) {}
+            try {
+                // Wait for user input
+                System.in.read();
+            } catch (IOException e) {}
         } else {
             System.out.println();
         }
@@ -37,7 +39,8 @@ public class Renderer implements GuiRenderer {
     @Override
     public void showSeries(Player player) {
         Collection<Series> complete = player.getCompleteSeries();
-        System.out.println(player.getName() + " has " + complete.size() + " complete series");
+        System.out.println(player.getName() + " has " + complete.size() +
+                           " complete series");
         
         for (Series series : complete) {
             System.out.println("Series of '" + series.getProperty() + "':");
@@ -64,7 +67,7 @@ public class Renderer implements GuiRenderer {
 
     @Override
     public void playerOut(Player player) {
-        System.out.println(player.getName() + " is out of the game!");
+        System.out.println(player.getName() + " is out of the game\n");
     }
     
     @Override

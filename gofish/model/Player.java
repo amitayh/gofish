@@ -1,6 +1,8 @@
 package gofish.model;
 
 import gofish.Game;
+import gofish.exception.NoOtherPlayersException;
+import gofish.exception.PlayerQueryException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -8,32 +10,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-abstract public class Player {
-    
-    public class Query {
-        
-        private Player playerAsked;
-        
-        private String cardName;
-
-        public Query(Player playerAsked, String cardName) {
-            this.playerAsked = playerAsked;
-            this.cardName = cardName;
-        }
-
-        public Player getPlayerAsking() {
-            return Player.this;
-        }
-
-        public Player getPlayerAsked() {
-            return playerAsked;
-        }
-
-        public String getCardName() {
-            return cardName;
-        }
-        
-    }
+abstract public class Player implements Cloneable {
     
     public enum Type {COMPUTER, HUMAN};
     
@@ -91,24 +68,41 @@ abstract public class Player {
         return !hand.isEmpty();
     }
     
+    /**
+     * @return total number of cards player has (in hand and in completed series)
+     */
     public int numCards() {
-        return (hand.size() + completeSeries.size());
+        int cardsInCompletedSeries = completeSeries.size() * Game.COMPLETE_SERIES_SIZE;
+        return (hand.size() + cardsInCompletedSeries);
     }
     
-    protected List<Player> otherPlayers(Collection<Player> allPlayers) {
+    /**
+     * @param allPlayers all players in game
+     * @return a list of other players (excluding self) that are still playing
+     * @throws NoOtherPlayersException 
+     */
+    protected List<Player> otherPlayers(Collection<Player> allPlayers) throws NoOtherPlayersException {
         List<Player> otherPlayers = new ArrayList<>(allPlayers.size());
         for (Player player : allPlayers) {
             if (player != this && player.canPlay()) {
                 otherPlayers.add(player);
             }
         }
+        if (otherPlayers.isEmpty()) {
+            throw new NoOtherPlayersException();
+        }
         return otherPlayers;
     }
     
+    /**
+     * Check if there's a complete series in hand
+     * 
+     * @return the completed series if it exists, null otherwise
+     */
     private Series checkComplete() {
         for (String property : hand.properties()) {
             if (hand.seriesSize(property) == Game.COMPLETE_SERIES_SIZE) {
-                Set<Card> cards = hand.removeSeries(property);
+                Set<Card> cards = hand.removeByProperty(property);
                 Series series = new Series(property, cards);
                 completeSeries.add(series);
                 return series;
@@ -119,9 +113,49 @@ abstract public class Player {
 
     @Override
     public String toString() {
-        return "Player " + name;
+        return "Player{type=" + type + ", name=" + name + "}";
     }
     
-    abstract public Player.Query getQuery(Game game);
+    @Override
+    public Player clone() {
+        Player clone;
+        
+        try {
+            clone = (Player) super.clone();
+            clone.hand = new CardsCollection(hand);
+            clone.completeSeries = new LinkedList<>(completeSeries);
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        
+        return clone;
+    }
+    
+    abstract public Query getQuery(Game game) throws PlayerQueryException;
+    
+    public class Query {
+        
+        private Player playerAsked;
+        
+        private String cardName;
+
+        public Query(Player playerAsked, String cardName) {
+            this.playerAsked = playerAsked;
+            this.cardName = cardName;
+        }
+
+        public Player getPlayerAsking() {
+            return Player.this;
+        }
+
+        public Player getPlayerAsked() {
+            return playerAsked;
+        }
+
+        public String getCardName() {
+            return cardName;
+        }
+        
+    }
 
 }

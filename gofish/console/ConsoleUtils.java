@@ -10,12 +10,13 @@ public class ConsoleUtils {
             throw new IllegalArgumentException();
         }
         
-        int invalid = min - 1;
-        int result = invalid;
+        boolean isValid = false;
+        int result = 0;
         do {            
             try {
                 result = checkBounds(input.nextInt(), min, max);
                 input.nextLine();
+                isValid = true;
             } catch (InputMismatchException e) {
                 System.out.print("Invalid input (must be a number), try again: ");
                 input.nextLine();
@@ -23,7 +24,7 @@ public class ConsoleUtils {
                 System.out.print("Invalid number (must be between " + min +
                                  " and " + max + "), try again: ");
             }
-        } while (result == invalid);
+        } while (!isValid);
         
         return result;
     }

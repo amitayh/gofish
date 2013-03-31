@@ -1,9 +1,10 @@
 package gofish.console.config;
 
-import gofish.Game;
+import gofish.Config;
 import gofish.ConfigFactory;
 import gofish.console.player.Computer;
 import gofish.console.player.Human;
+import gofish.exception.ConfigValidationException;
 import gofish.model.Card;
 import gofish.model.Player;
 import java.io.File;
@@ -23,7 +24,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class XmlConfig implements ConfigFactory {
+public class XMLConfig implements ConfigFactory {
     
     final private static String SCHEMA_FILE = "gofish/resources/gofish.xsd";
     
@@ -33,13 +34,30 @@ public class XmlConfig implements ConfigFactory {
     
     private Scanner input;
 
-    public XmlConfig(Scanner input) {
+    public XMLConfig(Scanner input) {
         this.input = input;
     }
 
     @Override
-    public Game.Config getConfig() {
-        Game.Config config = new Game.Config();
+    public Config getConfig() {
+        boolean isValid = false;
+        Config config = null;
+        
+        do {            
+            try {
+                config = createConfig();
+                config.validate();
+                isValid = true;
+            } catch (ConfigValidationException e) {
+                System.out.println("Invalid config file - " + e.getMessage());
+            }
+        } while (!isValid);
+        
+        return config;
+    }
+    
+    private Config createConfig() {
+        Config config = new Config();
         
         Element root = getXml();
         
@@ -86,17 +104,19 @@ public class XmlConfig implements ConfigFactory {
             throw new RuntimeException(e);
         }
         
+        boolean isValid = false;
         Element root = null;
         do {
             try {
                 Document doc = builder.parse(getFile());
                 root = doc.getDocumentElement();
+                isValid = true;
             } catch (SAXException e) {
                 System.out.println("Schema validation failed - " + e.getMessage());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } while (root == null);
+        } while (!isValid);
         
         return root;
     }
@@ -114,13 +134,16 @@ public class XmlConfig implements ConfigFactory {
     private Player getPlayer(Element playerElement) {
         Player player = null;
         String name = playerElement.getAttribute("name");
-        switch (playerElement.getAttribute("type")) {
+        String type = playerElement.getAttribute("type");
+        switch (type) {
             case TYPE_COMPUTER:
                 player = new Computer(name);
                 break;
             case TYPE_HUMAN:
                 player = new Human(input, name);
                 break;
+            default:
+                throw new ConfigValidationException("Unexpected player type - " + type);
         }
         
         if (player != null) {

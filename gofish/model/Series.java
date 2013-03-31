@@ -21,4 +21,9 @@ public class Series {
         return cards;
     }
 
+    @Override
+    public String toString() {
+        return "Series{property=" + property + "}";
+    }
+
 }
