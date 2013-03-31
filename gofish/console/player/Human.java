@@ -39,7 +39,7 @@ public class Human extends Player {
     private String getCardName(Player playerAsked) throws NoCardsLeftException {
         printHand();
         System.out.println("Which card do you want from " + playerAsked.getName() + "?");
-        System.out.print("Enter card's name (press Enter to quit game): ");
+        System.out.print("Enter card's name (press Enter to fold): ");
         String cardName = input.nextLine();
         if (cardName.isEmpty()) {
             throw new NoCardsLeftException();

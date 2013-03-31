@@ -134,9 +134,7 @@ public class Game {
      */
     private void setAvailableCards() {
         for (Player player : config.getPlayers()) {
-            for (Card card : player.getHand()) {
-                availableCards.add(card);
-            }
+            availableCards.addAll(player.getHand());
         }
     }
     
@@ -222,9 +220,7 @@ public class Game {
         Series series = to.addCard(card);
         if (series != null) {
             // Card completed a series
-            for (Card cardInSeries : series.getCards()) {
-                availableCards.remove(cardInSeries);
-            }
+            availableCards.removeAll(series.getCards());
             renderer.seriesCompleted(to, series);
         }
     }
@@ -233,6 +229,7 @@ public class Game {
         
         @Override
         public int compare(Player p1, Player p2) {
+            // Compare players by number of completed series
             return p1.getCompleteSeries().size() - p2.getCompleteSeries().size();
         }
         
