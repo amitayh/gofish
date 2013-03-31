@@ -40,20 +40,23 @@ public class XMLConfig implements ConfigFactory {
 
     @Override
     public Config getConfig() {
+        boolean isValid = false;
         Config config = null;
         
         do {            
             try {
-                config = getConfigAndValidate();
+                config = createConfig();
+                config.validate();
+                isValid = true;
             } catch (ConfigValidationException e) {
                 System.out.println("Invalid config file - " + e.getMessage());
             }
-        } while (config == null);
+        } while (!isValid);
         
         return config;
     }
     
-    private Config getConfigAndValidate() {
+    private Config createConfig() {
         Config config = new Config();
         
         Element root = getXml();
@@ -80,8 +83,6 @@ public class XMLConfig implements ConfigFactory {
             }
         }
         
-        config.validate();
-        
         return config;
     }
     
@@ -103,17 +104,19 @@ public class XMLConfig implements ConfigFactory {
             throw new RuntimeException(e);
         }
         
+        boolean isValid = false;
         Element root = null;
         do {
             try {
                 Document doc = builder.parse(getFile());
                 root = doc.getDocumentElement();
+                isValid = true;
             } catch (SAXException e) {
                 System.out.println("Schema validation failed - " + e.getMessage());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } while (root == null);
+        } while (!isValid);
         
         return root;
     }

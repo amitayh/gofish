@@ -43,18 +43,19 @@ public class ManualConfig implements ConfigFactory {
         
         // Create players
         for (int i = 0; i < numPlayers; i++) {
+            boolean playerAdded = false;
             Player player;
             do {
                 System.out.println("\nConfigure player #" + (i + 1));
                 player = getPlayer();
                 try {
                     config.addPlayer(player);
+                    playerAdded = true;
                 } catch (PlayerCollisionException e) {
                     System.out.println("Name '" + e.getName() +
                                        "' is already being used!");
-                    player = null;
                 }
-            } while (player == null);
+            } while (!playerAdded);
         }
         
         // Deal a stanrad 52 cards deck

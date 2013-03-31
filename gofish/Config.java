@@ -1,6 +1,7 @@
 package gofish;
 
 import gofish.exception.CardCollisionException;
+import gofish.exception.ConfigValidationException;
 import gofish.exception.PlayerCollisionException;
 import gofish.exception.TooFewCardsException;
 import gofish.exception.TooFewPlayersException;
@@ -55,7 +56,7 @@ public class Config implements Cloneable {
         return players;
     }
 
-    public void validate() {
+    public void validate() throws ConfigValidationException {
         int numPlayers = players.size();
         if (numPlayers < Game.MIN_NUM_PLAYERS) {
             throw new TooFewPlayersException(Game.MIN_NUM_PLAYERS, numPlayers);

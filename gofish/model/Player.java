@@ -79,6 +79,7 @@ abstract public class Player implements Cloneable {
     /**
      * @param allPlayers all players in game
      * @return a list of other players (excluding self) that are still playing
+     * @throws NoOtherPlayersException 
      */
     protected List<Player> otherPlayers(Collection<Player> allPlayers) throws NoOtherPlayersException {
         List<Player> otherPlayers = new ArrayList<>(allPlayers.size());
