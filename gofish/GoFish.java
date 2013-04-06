@@ -1,17 +1,18 @@
 package gofish;
 
-import gofish.console.ConsoleGame;
+import gofish.swing.SwingGame;
+import javax.swing.SwingUtilities;
 
 public class GoFish {
 
     public static void main(String[] args) {
-        ConsoleGame game = new ConsoleGame();
-        try {
-            game.run();
-        } catch (Exception e) {
-            GUIRenderer renderer = game.getRenderer();
-            renderer.error(e.getMessage());
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                SwingGame game = new SwingGame();
+                game.setVisible(true);
+            }
+        });
     }
     
 }

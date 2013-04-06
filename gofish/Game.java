@@ -25,7 +25,7 @@ public class Game {
         
     final public static int MAX_NUM_PLAYERS = 6;
 
-    final public static int MIN_NUM_CARDS = 24;
+    final public static int MIN_NUM_CARDS = 28;
     
     /**
      * Used to determine who's the winner
