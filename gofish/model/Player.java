@@ -12,7 +12,22 @@ import java.util.Set;
 
 abstract public class Player implements Cloneable {
     
-    public enum Type {COMPUTER, HUMAN};
+    public enum Type {
+        COMPUTER("Computer"),
+        HUMAN("Human");
+        
+        private String value;
+        
+        Type(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
+        
+    };
     
     private Type type;
     

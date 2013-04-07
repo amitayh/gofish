@@ -1,8 +1,8 @@
 package gofish.swing;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 public class SwingGame extends JFrame {
     
@@ -11,7 +11,6 @@ public class SwingGame extends JFrame {
     final private static int WINDOW_HEIGHT = 600;
 
     public SwingGame() {
-        super();
         init();        
     }
 
@@ -21,16 +20,13 @@ public class SwingGame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
-        // Container
-        JPanel panel = new JPanel();
+        setJMenuBar(new Menu());
         
-        JButton manual = new JButton("Manual configuration");
-        JButton xml = new JButton("XML configuration");
+        JTabbedPane tabs = new JTabbedPane();
+        tabs.addTab("Config", new Config());
+        tabs.addTab("Game", new JPanel());
         
-        panel.add(manual);
-        panel.add(xml);
-        
-        add(panel);
+        add(tabs);
     }
 
 }
