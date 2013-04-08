@@ -3,8 +3,10 @@ package gofish.swing.config;
 import gofish.swing.Config;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -23,7 +25,8 @@ abstract public class ConfigCard extends JPanel {
     }
 
     private void initUI() {
-        center = new JPanel();
+        center = new JPanel(new GridBagLayout());
+        center.setBorder(BorderFactory.createTitledBorder("Configure Game"));
         add(center, BorderLayout.CENTER);
         
         LayoutManager layout = new FlowLayout(FlowLayout.RIGHT);

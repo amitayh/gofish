@@ -63,6 +63,7 @@ public class Player extends JPanel implements ActionListener {
     
     @Override
     public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
         state.setSelected(enabled);
         type.setEnabled(enabled);
         name.setEnabled(enabled);
