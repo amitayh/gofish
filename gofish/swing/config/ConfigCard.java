@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
 
 abstract public class ConfigCard extends JPanel {
     
@@ -26,7 +27,7 @@ abstract public class ConfigCard extends JPanel {
 
     private void initUI() {
         center = new JPanel(new GridBagLayout());
-        center.setBorder(BorderFactory.createTitledBorder("Configure Game"));
+        center.setBorder(new TitledBorder("Configure Game"));
         add(center, BorderLayout.CENTER);
         
         LayoutManager layout = new FlowLayout(FlowLayout.RIGHT);
