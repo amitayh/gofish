@@ -16,12 +16,15 @@ public class Menu extends JMenuBar implements ActionListener {
     
     private JMenuItem about;
     
-    public Menu() {
+    private SwingGame game;
+    
+    public Menu(SwingGame game) {
+        this.game = game;
         buildMenu();
     }
 
     private void buildMenu() {
-        JMenu game = new JMenu("Game");
+        JMenu file = new JMenu("File");
         
         newGame = new JMenuItem("New game");
         newGame.addActionListener(this);
@@ -32,11 +35,11 @@ public class Menu extends JMenuBar implements ActionListener {
         exit = new JMenuItem("Exit");
         exit.addActionListener(this);
         
-        game.add(newGame);
-        game.add(restartGame);
-        game.addSeparator();
-        game.add(exit);
-        add(game);
+        file.add(newGame);
+        file.add(restartGame);
+        file.addSeparator();
+        file.add(exit);
+        add(file);
         
         JMenu help = new JMenu("Help");
         
@@ -50,11 +53,12 @@ public class Menu extends JMenuBar implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source == exit) {
+        if (source == newGame) {
+            game.configure();
+        } else if (source == exit) {
             System.exit(0);
         } else if (source == about) {
-            AboutDialog aboutDialog = new AboutDialog();
-            aboutDialog.setVisible(true);
+            game.about();
         }
     }
 

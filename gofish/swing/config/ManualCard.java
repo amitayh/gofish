@@ -6,6 +6,7 @@ import gofish.swing.config.manual.Player;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
+import javax.swing.border.TitledBorder;
 
 public class ManualCard extends ConfigCard {
     
@@ -15,6 +16,8 @@ public class ManualCard extends ConfigCard {
     
     @Override
     protected void initComponents() {
+        center.setBorder(new TitledBorder("Manual Configuration"));
+        
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         

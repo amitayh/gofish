@@ -1,12 +1,15 @@
 package gofish.swing;
 
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 public class AboutDialog extends JDialog {
     
-    public AboutDialog() {
+    public AboutDialog(JFrame parent) {
+        super(parent, "GoFish - About", true);
+        
         setSize(300, 200);
-        setTitle("GoFish - About");
+        setResizable(false);
         setLocationRelativeTo(null);
     }
 

@@ -1,15 +1,14 @@
 package gofish.swing.config;
 
-import gofish.swing.Config;
+import gofish.swing.ConfigDialog;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
+import javax.swing.border.EmptyBorder;
 
 abstract public class ConfigCard extends JPanel {
     
@@ -26,8 +25,9 @@ abstract public class ConfigCard extends JPanel {
     }
 
     private void initUI() {
+        setBorder(new EmptyBorder(5, 5, 5, 5));
+        
         center = new JPanel(new GridBagLayout());
-        center.setBorder(new TitledBorder("Configure Game"));
         add(center, BorderLayout.CENTER);
         
         LayoutManager layout = new FlowLayout(FlowLayout.RIGHT);
@@ -35,7 +35,7 @@ abstract public class ConfigCard extends JPanel {
         add(bottom, BorderLayout.PAGE_END);
         
         JButton back = new JButton("Back");
-        back.setName(Config.MAIN);
+        back.setName(ConfigDialog.MAIN);
         back.addActionListener(listener);
         bottom.add(back);
         

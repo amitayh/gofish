@@ -8,29 +8,39 @@ import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Config extends JPanel implements ActionListener, ConfigFactory {
+public class ConfigDialog extends JDialog implements ActionListener, ConfigFactory {
     
     final public static String MAIN = "main";
     
     final public static String MANUAL = "manual";
     
     final public static String XML = "xml";
+    
+    private JPanel panel;
 
-    public Config() {
-        super(new CardLayout());
+    public ConfigDialog(JFrame parent) {
+        super(parent, "GoFish - Game Configuration", true);
         
-        add(new MainCard(this), MAIN);
-        add(new ManualCard(this), MANUAL);
-        add(new XMLCard(this), XML);
+        panel = new JPanel(new CardLayout());
+        panel.add(new MainCard(this), MAIN);
+        panel.add(new ManualCard(this), MANUAL);
+        panel.add(new XMLCard(this), XML);
+        add(panel);
+        
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton button = (JButton) e.getSource();
-        CardLayout layout = (CardLayout) getLayout();
-        layout.show(this, button.getName());
+        CardLayout layout = (CardLayout) panel.getLayout();
+        layout.show(panel, button.getName());
     }
 
     @Override
