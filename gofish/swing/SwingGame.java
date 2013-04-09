@@ -2,10 +2,10 @@ package gofish.swing;
 
 import gofish.swing.player.Computer;
 import gofish.swing.player.PlayerView;
+import java.awt.Container;
 import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
 
 public class SwingGame extends JFrame {
     
@@ -24,7 +24,8 @@ public class SwingGame extends JFrame {
         JMenuBar menu = new Menu(this);
         setJMenuBar(menu);
         
-        JPanel panel = new JPanel(new GridLayout(2, 3));
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new GridLayout(2, 3));
         for (int i = 0; i < 6; i++) {
             Computer player = new Computer("Player " + (i + 1));
             PlayerView playerView = new PlayerView(player);
@@ -32,9 +33,8 @@ public class SwingGame extends JFrame {
                 playerView.isPlaying();
                 playerView.say("Hi, I'm " + player.getName() + "!");
             }
-            panel.add(playerView);
+            contentPane.add(playerView);
         }
-        add(panel);
         
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setLocationRelativeTo(null);

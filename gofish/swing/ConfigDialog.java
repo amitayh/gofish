@@ -5,12 +5,12 @@ import gofish.swing.config.MainCard;
 import gofish.swing.config.ManualCard;
 import gofish.swing.config.XMLCard;
 import java.awt.CardLayout;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class ConfigDialog extends JDialog implements ActionListener, ConfigFactory {
     
@@ -19,17 +19,15 @@ public class ConfigDialog extends JDialog implements ActionListener, ConfigFacto
     final public static String MANUAL = "manual";
     
     final public static String XML = "xml";
-    
-    private JPanel panel;
 
     public ConfigDialog(JFrame parent) {
         super(parent, "GoFish - Game Configuration", true);
         
-        panel = new JPanel(new CardLayout());
-        panel.add(new MainCard(this), MAIN);
-        panel.add(new ManualCard(this), MANUAL);
-        panel.add(new XMLCard(this), XML);
-        add(panel);
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new CardLayout());
+        contentPane.add(new MainCard(this), MAIN);
+        contentPane.add(new ManualCard(this), MANUAL);
+        contentPane.add(new XMLCard(this), XML);
         
         pack();
         setResizable(false);
@@ -38,9 +36,10 @@ public class ConfigDialog extends JDialog implements ActionListener, ConfigFacto
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Container contentPane = getContentPane();
+        CardLayout layout = (CardLayout) contentPane.getLayout();
         JButton button = (JButton) e.getSource();
-        CardLayout layout = (CardLayout) panel.getLayout();
-        layout.show(panel, button.getName());
+        layout.show(contentPane, button.getName());
     }
 
     @Override
