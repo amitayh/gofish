@@ -1,6 +1,7 @@
 package gofish.swing.player;
 
 import gofish.model.Player;
+import gofish.swing.SwingUtils;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,7 +19,7 @@ public class PlayerView extends JPanel {
     private JLabel name;
     
     public PlayerView(Player player) {
-        String labelText = "<html><strong>" + player.getName() + "</strong></html>";
+        String labelText = SwingUtils.boldText(player.getName());
         name = new JLabel(labelText);
         add(name);
     }

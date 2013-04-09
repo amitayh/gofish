@@ -31,7 +31,7 @@ public class ConfigDialog extends JDialog implements ActionListener, ConfigFacto
         
         pack();
         setResizable(false);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(parent);
     }
 
     @Override
