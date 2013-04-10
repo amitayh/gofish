@@ -18,14 +18,18 @@ public class AboutDialog extends JDialog {
         JLabel label;
         
         constraints.gridy = 0;
-        label = new JLabel(SwingUtils.boldText("GoFish v2.0 - Swing UI"));
+        label = new JLabel(SwingUtils.bold("GoFish v2.0 - Swing UI"));
         contentPane.add(label, constraints);
         
         constraints.gridy = 1;
         label = new JLabel("Created by Amitay Horwitz");
         contentPane.add(label, constraints);
         
-        setSize(300, 200);
+        constraints.gridy = 2;
+        label = new JLabel("Internet & Java - Spring 2013");
+        contentPane.add(label, constraints);
+        
+        setSize(250, 120);
         setResizable(false);
         setLocationRelativeTo(parent);
     }

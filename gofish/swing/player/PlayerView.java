@@ -19,7 +19,7 @@ public class PlayerView extends JPanel {
     private JLabel name;
     
     public PlayerView(Player player) {
-        String labelText = SwingUtils.boldText(player.getName());
+        String labelText = SwingUtils.bold(player.getName());
         name = new JLabel(labelText);
         add(name);
     }

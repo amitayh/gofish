@@ -10,7 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Player extends JPanel implements ActionListener {
+public class Player extends JPanel {
     
     final private static Type[] TYPES = {Type.HUMAN, Type.COMPUTER};
     
@@ -46,7 +46,12 @@ public class Player extends JPanel implements ActionListener {
     private void init() {
         state = new JCheckBox();
         state.setSelected(true);
-        state.addActionListener(this);
+        state.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setEnabled(state.isSelected());
+            }
+        });
         add(state);
         
         type = new JComboBox(TYPES);
@@ -54,11 +59,6 @@ public class Player extends JPanel implements ActionListener {
         
         name = new JTextField(COLUMNS);
         add(name);
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        this.setEnabled(state.isSelected());
     }
     
     @Override

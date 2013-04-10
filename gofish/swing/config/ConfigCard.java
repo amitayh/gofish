@@ -1,26 +1,32 @@
 package gofish.swing.config;
 
+import gofish.ConfigFactory;
 import gofish.swing.ConfigDialog;
+import gofish.swing.SwingGame;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-abstract public class ConfigCard extends JPanel {
+abstract public class ConfigCard extends JPanel implements ConfigFactory {
     
     protected JPanel center;
     
     protected JPanel bottom;
     
-    protected ActionListener listener;
+    private SwingGame game;
     
-    public ConfigCard(ActionListener listener) {
+    private ConfigDialog dialog;
+    
+    public ConfigCard(SwingGame game, ConfigDialog dialog) {
         super(new BorderLayout());
-        this.listener = listener;
+        this.game = game;
+        this.dialog = dialog;
         initUI();        
     }
 
@@ -35,11 +41,22 @@ abstract public class ConfigCard extends JPanel {
         add(bottom, BorderLayout.PAGE_END);
         
         JButton back = new JButton("Back");
-        back.setName(ConfigDialog.MAIN);
-        back.addActionListener(listener);
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.showCard(ConfigDialog.MAIN);
+            }
+        });
         bottom.add(back);
         
         JButton start = new JButton("Start game");
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.init(getConfig());
+                dialog.setVisible(false);
+            }
+        });
         bottom.add(start);
         
         initComponents();
