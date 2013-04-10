@@ -2,6 +2,8 @@ package gofish.swing.config;
 
 import gofish.Config;
 import gofish.Game;
+import gofish.model.Card;
+import gofish.model.Deck;
 import gofish.model.Player.Type;
 import gofish.swing.ConfigDialog;
 import gofish.swing.SwingGame;
@@ -37,7 +39,7 @@ public class ManualCard extends ConfigCard {
             String name = "Player " + (i + 1);
             Player player = new Player(type, name);
             if (i < Game.MIN_NUM_PLAYERS) {
-                // Lock first 3 players
+                // Lock first 3 players (minimum required)
                 player.lock();
             } else {
                 // Disable other players by default
@@ -68,10 +70,24 @@ public class ManualCard extends ConfigCard {
                 config.addPlayer(player.createPlayer());
             }
         }
+        dealCards(config.getPlayers());
         config.setAllowMutipleRequests(allowMultipleRequests.isSelected());
         config.setForceShowOfSeries(forceShowOfSeries.isSelected());
         
         return config;
+    }
+    
+    private void dealCards(List<gofish.model.Player> players) {
+        Deck deck = new Deck();
+        deck.shuffle();
+        
+        int index = 0;
+        while (deck.size() > 0) {
+            gofish.model.Player player = players.get(index);
+            Card card = deck.deal();
+            player.addCard(card);
+            index = (index + 1) % players.size();
+        }
     }
 
 }

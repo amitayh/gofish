@@ -31,7 +31,14 @@ public class AboutDialog extends JDialog {
         
         setSize(250, 120);
         setResizable(false);
-        setLocationRelativeTo(parent);
+    }
+    
+    @Override
+    public void setVisible(boolean flag) {
+        if (flag) {
+            setLocationRelativeTo(getParent());
+        }
+        super.setVisible(flag);
     }
 
 }

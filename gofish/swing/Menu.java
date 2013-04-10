@@ -6,15 +6,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class Menu extends JMenuBar implements ActionListener {
-    
-    private JMenuItem newGame;
-    
-    private JMenuItem restartGame;
-    
-    private JMenuItem exit;
-    
-    private JMenuItem about;
+public class Menu extends JMenuBar {
     
     private SwingGame game;
     
@@ -26,14 +18,23 @@ public class Menu extends JMenuBar implements ActionListener {
     private void buildMenu() {
         JMenu file = new JMenu("File");
         
-        newGame = new JMenuItem("New game");
-        newGame.addActionListener(this);
+        JMenuItem newGame = new JMenuItem("New game");
+        newGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.configure();
+            }
+        });
         
-        restartGame = new JMenuItem("Restart game");
-        restartGame.addActionListener(this);
+        JMenuItem restartGame = new JMenuItem("Restart game");
         
-        exit = new JMenuItem("Exit");
-        exit.addActionListener(this);
+        JMenuItem exit = new JMenuItem("Exit");
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
         
         file.add(newGame);
         file.add(restartGame);
@@ -43,23 +44,16 @@ public class Menu extends JMenuBar implements ActionListener {
         
         JMenu help = new JMenu("Help");
         
-        about = new JMenuItem("About");
-        about.addActionListener(this);
+        JMenuItem about = new JMenuItem("About");
+        about.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.about();
+            }
+        });
         
         help.add(about);
         add(help);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object source = e.getSource();
-        if (source == newGame) {
-            game.configure();
-        } else if (source == exit) {
-            System.exit(0);
-        } else if (source == about) {
-            game.about();
-        }
     }
 
 }

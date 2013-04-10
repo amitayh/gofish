@@ -53,8 +53,8 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.init(getConfig());
                 dialog.setVisible(false);
+                game.start(getConfig());
             }
         });
         bottom.add(start);

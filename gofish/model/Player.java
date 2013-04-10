@@ -125,6 +125,28 @@ abstract public class Player implements Cloneable {
         }
         return null;
     }
+    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + this.name.hashCode();
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Player other = (Player) obj;
+        if (!name.equals(other.name)) {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public String toString() {

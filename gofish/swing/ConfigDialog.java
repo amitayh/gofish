@@ -6,6 +6,7 @@ import gofish.swing.config.XMLCard;
 import java.awt.CardLayout;
 import java.awt.Container;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 
 public class ConfigDialog extends JDialog {
     
@@ -14,18 +15,20 @@ public class ConfigDialog extends JDialog {
     final public static String MANUAL = "manual";
     
     final public static String XML = "xml";
-    
-    private SwingGame game;
 
     public ConfigDialog(SwingGame game) {
         super(game, "GoFish - Game Configuration", true);
-        this.game = game;
         
         Container contentPane = getContentPane();
         contentPane.setLayout(new CardLayout());
-        contentPane.add(new MainCard(this), MAIN);
-        contentPane.add(new ManualCard(game, this), MANUAL);
-        contentPane.add(new XMLCard(game, this), XML);
+        
+        JPanel main = new MainCard(this);
+        JPanel manual = new ManualCard(game, this);
+        JPanel xml = new XMLCard(game, this);
+        
+        contentPane.add(main, MAIN);
+        contentPane.add(manual, MANUAL);
+        contentPane.add(xml, XML);
         
         pack();
         setResizable(false);
@@ -38,10 +41,12 @@ public class ConfigDialog extends JDialog {
     }
 
     @Override
-    public void setVisible(boolean b) {
-        setLocationRelativeTo(game);
-        showCard(MAIN);
-        super.setVisible(b);
+    public void setVisible(boolean flag) {
+        if (flag) {
+            showCard(MAIN);
+            setLocationRelativeTo(getParent());
+        }
+        super.setVisible(flag);
     }
     
     

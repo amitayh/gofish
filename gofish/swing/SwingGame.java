@@ -2,17 +2,19 @@ package gofish.swing;
 
 import gofish.Config;
 import gofish.GUIRenderer;
+import gofish.Game;
 import gofish.model.Card;
 import gofish.model.Player;
 import gofish.model.Series;
-import gofish.swing.player.Computer;
 import gofish.swing.player.PlayerView;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridLayout;
-import javax.swing.JDialog;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFrame;
-import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class SwingGame extends JFrame implements GUIRenderer {
@@ -24,6 +26,10 @@ public class SwingGame extends JFrame implements GUIRenderer {
     private ConfigDialog configDialog;
     
     private AboutDialog aboutDialog;
+    
+    private Map<Player, PlayerView> views = new HashMap<>();
+    
+    private PlayerView current = null;
 
     public SwingGame() {
         setTitle("GoFish");
@@ -63,24 +69,36 @@ public class SwingGame extends JFrame implements GUIRenderer {
         });
     }
     
-    public void init(Config config) {
-        Container contentPane = getContentPane();
+    public void start(Config config) {
+        init(config);
         
-        boolean first = true;
+        Game game = new Game(this, config);
+        game.start();
+    }
+    
+    private void init(Config config) {
+        Container contentPane = getContentPane();
+        empty(contentPane);
         for (Player player : config.getPlayers()) {
-            PlayerView playerView = new PlayerView(player);
-            if (first) {
-                playerView.isPlaying();
-                playerView.say("Hi, I'm " + player.getName() + "!");
-                first = false;
-            }
-            contentPane.add(playerView);
+            PlayerView view = new PlayerView(player);
+            views.put(player, view);
+            contentPane.add(view);
+        }
+        contentPane.revalidate();
+    }
+    
+    private void empty(Container container) {
+        for (Component component : container.getComponents()) {
+            container.remove(component);
         }
     }
 
     @Override
     public void startGame() {
-
+        String message = "Game is starting!";
+        String title = "GoFish";
+        int type = JOptionPane.INFORMATION_MESSAGE;
+        JOptionPane.showMessageDialog(this, message, title, type);
     }
 
     @Override
@@ -90,7 +108,13 @@ public class SwingGame extends JFrame implements GUIRenderer {
 
     @Override
     public void playerTurn(Player player) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (current != null) {
+            current.isNotPlaying();
+        }
+        
+        PlayerView view = views.get(player);
+        view.isPlaying();
+        current = view;
     }
 
     @Override
