@@ -7,7 +7,6 @@ import gofish.model.Card;
 import gofish.model.Player;
 import gofish.model.Series;
 import gofish.swing.player.PlayerView;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.util.HashMap;
@@ -78,19 +77,13 @@ public class SwingGame extends JFrame implements GUIRenderer {
     
     private void init(Config config) {
         Container contentPane = getContentPane();
-        empty(contentPane);
+        contentPane.removeAll();
         for (Player player : config.getPlayers()) {
             PlayerView view = new PlayerView(player);
             views.put(player, view);
             contentPane.add(view);
         }
         contentPane.revalidate();
-    }
-    
-    private void empty(Container container) {
-        for (Component component : container.getComponents()) {
-            container.remove(component);
-        }
     }
 
     @Override
