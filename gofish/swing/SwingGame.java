@@ -1,12 +1,12 @@
 package gofish.swing;
 
+import gofish.swing.player.PlayerPanel;
 import gofish.Config;
 import gofish.GUIRenderer;
 import gofish.Game;
 import gofish.model.Card;
 import gofish.model.Player;
 import gofish.model.Series;
-import gofish.swing.player.PlayerView;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.util.HashMap;
@@ -26,9 +26,9 @@ public class SwingGame extends JFrame implements GUIRenderer {
     
     private AboutDialog aboutDialog;
     
-    private Map<Player, PlayerView> views = new HashMap<>();
+    private Map<Player, PlayerPanel> playerPanels = new HashMap<>();
     
-    private PlayerView current = null;
+    private PlayerPanel current = null;
 
     public SwingGame() {
         setTitle("GoFish");
@@ -78,10 +78,12 @@ public class SwingGame extends JFrame implements GUIRenderer {
     private void init(Config config) {
         Container contentPane = getContentPane();
         contentPane.removeAll();
+        playerPanels.clear();
+        current = null;
         for (Player player : config.getPlayers()) {
-            PlayerView view = new PlayerView(player);
-            views.put(player, view);
-            contentPane.add(view);
+            PlayerPanel playerPanel = new PlayerPanel(player);
+            playerPanels.put(player, playerPanel);
+            contentPane.add(playerPanel);
         }
         contentPane.revalidate();
     }
@@ -105,14 +107,15 @@ public class SwingGame extends JFrame implements GUIRenderer {
             current.isNotPlaying();
         }
         
-        PlayerView view = views.get(player);
-        view.isPlaying();
-        current = view;
+        PlayerPanel playerPanel = playerPanels.get(player);
+        playerPanel.isPlaying();
+        current = playerPanel;
     }
 
     @Override
     public void showSeries(Player player) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PlayerPanel playerPanel = playerPanels.get(player);
+        playerPanel.say("Showing series");
     }
 
     @Override
