@@ -2,9 +2,8 @@ package gofish.swing.player;
 
 import gofish.Game;
 import gofish.exception.PlayerQueryException;
-import gofish.model.Player;
 
-public class Human extends Player {
+public class Human extends AbstractPlayer {
 
     public Human(String name) {
         super(Type.HUMAN, name);

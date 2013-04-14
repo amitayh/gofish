@@ -10,7 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Player extends JPanel {
+public class PlayerSettingsPanel extends JPanel {
     
     final private static Type[] TYPES = {Type.HUMAN, Type.COMPUTER};
     
@@ -22,7 +22,7 @@ public class Player extends JPanel {
     
     private JTextField name;
     
-    public Player(Type type, String name) {
+    public PlayerSettingsPanel(Type type, String name) {
         init();
         this.type.setSelectedItem(type);
         this.name.setText(name);

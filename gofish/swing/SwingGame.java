@@ -1,16 +1,13 @@
 package gofish.swing;
 
-import gofish.swing.player.PlayerPanel;
 import gofish.Config;
 import gofish.GUIRenderer;
 import gofish.Game;
 import gofish.model.Card;
 import gofish.model.Player;
 import gofish.model.Series;
+import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.GridLayout;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
@@ -18,17 +15,19 @@ import javax.swing.SwingUtilities;
 
 public class SwingGame extends JFrame implements GUIRenderer {
     
-    final private static int WINDOW_WIDTH = 800;
+    final private static int DEFAULT_WIDTH = 800;
     
-    final private static int WINDOW_HEIGHT = 600;
+    final private static int DEFAULT_HEIGHT = 600;
     
     private ConfigDialog configDialog;
     
     private AboutDialog aboutDialog;
     
-    private Map<Player, PlayerPanel> playerPanels = new HashMap<>();
+    private GameBoardPanel gameBoard;
     
-    private PlayerPanel current = null;
+    private StatusBarPanel statusBar;
+    
+    private Config loadedConfig;
 
     public SwingGame() {
         setTitle("GoFish");
@@ -40,10 +39,16 @@ public class SwingGame extends JFrame implements GUIRenderer {
         
         // Prepare content pane
         Container contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(2, 3));
+        contentPane.setLayout(new BorderLayout());
+        
+        gameBoard = new GameBoardPanel();
+        contentPane.add(gameBoard, BorderLayout.CENTER);
+        
+        statusBar = new StatusBarPanel("Ready");
+        contentPane.add(statusBar, BorderLayout.PAGE_END);
         
         // Window size / position
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setLocationRelativeTo(null);
     }
 
@@ -56,12 +61,11 @@ public class SwingGame extends JFrame implements GUIRenderer {
     }
 
     public void configure() {
-        final SwingGame game = this;
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 if (configDialog == null) {
-                    configDialog = new ConfigDialog(game);
+                    configDialog = new ConfigDialog(SwingGame.this);
                 }
                 configDialog.setVisible(true);
             }
@@ -70,22 +74,22 @@ public class SwingGame extends JFrame implements GUIRenderer {
     
     public void start(Config config) {
         init(config);
-        
-        Game game = new Game(this, config);
-        game.start();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Game game = new Game(SwingGame.this, loadedConfig);
+                game.start();
+            }
+        });
     }
     
     private void init(Config config) {
-        Container contentPane = getContentPane();
-        contentPane.removeAll();
-        playerPanels.clear();
-        current = null;
+        loadedConfig = config;
+        gameBoard.clear();
         for (Player player : config.getPlayers()) {
-            PlayerPanel playerPanel = new PlayerPanel(player);
-            playerPanels.put(player, playerPanel);
-            contentPane.add(playerPanel);
+            gameBoard.addPlayer(player);
         }
-        contentPane.revalidate();
+        gameBoard.revalidate();
     }
 
     @Override
@@ -103,19 +107,13 @@ public class SwingGame extends JFrame implements GUIRenderer {
 
     @Override
     public void playerTurn(Player player) {
-        if (current != null) {
-            current.isNotPlaying();
-        }
-        
-        PlayerPanel playerPanel = playerPanels.get(player);
-        playerPanel.isPlaying();
-        current = playerPanel;
+        gameBoard.setCurrentPlayer(player);
+        statusBar.setText(player.getName() + " is playing");
     }
 
     @Override
     public void showSeries(Player player) {
-        PlayerPanel playerPanel = playerPanels.get(player);
-        playerPanel.say("Showing series");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
