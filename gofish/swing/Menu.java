@@ -19,12 +19,8 @@ public class Menu extends JMenuBar {
         JMenu file = new JMenu("File");
         
         JMenuItem newGame = new JMenuItem("New game");
-        newGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                game.configure();
-            }
-        });
+        ActionListener newGameAction = new NewGameAction(game);
+        newGame.addActionListener(newGameAction);
         
         JMenuItem restartGame = new JMenuItem("Restart game");
         
@@ -45,12 +41,8 @@ public class Menu extends JMenuBar {
         JMenu help = new JMenu("Help");
         
         JMenuItem about = new JMenuItem("About");
-        about.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                game.about();
-            }
-        });
+        ActionListener aboutAction = new AboutAction(game);
+        about.addActionListener(aboutAction);
         
         help.add(about);
         add(help);

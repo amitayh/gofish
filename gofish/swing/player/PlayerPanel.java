@@ -48,6 +48,16 @@ public class PlayerPanel extends javax.swing.JPanel {
     
     public void say(String message) {
         BalloonTip tip = new BalloonTip(nameLabel, message, BALLOON_STYLE, false);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        tip.closeBalloon();
+    }
+    
+    public Player getPlayer() {
+        return player;
     }
     
     private void updateHandPanel(Player player) {

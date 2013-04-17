@@ -4,30 +4,28 @@ import gofish.Config;
 import gofish.GUIRenderer;
 import gofish.Game;
 import gofish.model.Card;
+import gofish.model.Deck;
 import gofish.model.Player;
 import gofish.model.Series;
+import gofish.swing.player.AbstractPlayer;
+import gofish.swing.player.Computer;
+import gofish.swing.player.Human;
+import gofish.swing.player.PlayerPanel;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
-public class SwingGame extends JFrame implements GUIRenderer {
-    
+public class SwingGame extends JFrame implements GUIRenderer, Runnable {
+
     final private static int DEFAULT_WIDTH = 800;
     
     final private static int DEFAULT_HEIGHT = 600;
     
-    private ConfigDialog configDialog;
-    
-    private AboutDialog aboutDialog;
-    
     private GameBoardPanel gameBoard;
     
     private StatusBarPanel statusBar;
-    
-    private Config loadedConfig;
 
     public SwingGame() {
         setTitle("GoFish");
@@ -51,40 +49,25 @@ public class SwingGame extends JFrame implements GUIRenderer {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setLocationRelativeTo(null);
     }
-
-    void about() {
-        if (aboutDialog == null) {
-            aboutDialog = new AboutDialog(this);
-        }
-        aboutDialog.setLocationRelativeTo(this);
-        aboutDialog.setVisible(true);
-    }
-
-    public void configure() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (configDialog == null) {
-                    configDialog = new ConfigDialog(SwingGame.this);
-                }
-                configDialog.setVisible(true);
-            }
-        });
+    
+    public GameBoardPanel getGameBoard() {
+        return gameBoard;
     }
     
-    public void start(Config config) {
+    public void setStatusBarText(String text) {
+        statusBar.setText(text);
+    }
+    
+    @Override
+    public void run() {
+        Config config = getConfig(); // Temp, create from menu
+        Game game = new Game(this, config);
         init(config);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Game game = new Game(SwingGame.this, loadedConfig);
-                game.start();
-            }
-        });
+        
+        game.start();
     }
-    
+
     private void init(Config config) {
-        loadedConfig = config;
         gameBoard.clear();
         for (Player player : config.getPlayers()) {
             gameBoard.addPlayer(player);
@@ -113,7 +96,6 @@ public class SwingGame extends JFrame implements GUIRenderer {
 
     @Override
     public void showSeries(Player player) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -123,7 +105,10 @@ public class SwingGame extends JFrame implements GUIRenderer {
 
     @Override
     public void playerQuery(Player.Query query) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Player playerAsking = query.getPlayerAsking();
+        Player playerAsked = query.getPlayerAsked();
+        PlayerPanel panel = gameBoard.getPlayerPanel(playerAsking);
+        panel.say(playerAsked.getName() + ", do you have " + query.getCardName() + "?");
     }
 
     @Override
@@ -149,6 +134,40 @@ public class SwingGame extends JFrame implements GUIRenderer {
     @Override
     public void error(String message) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private Config getConfig() {
+        Config config = new Config();
+        
+        config.setAllowMutipleRequests(true);
+        config.setForceShowOfSeries(true);
+        
+        AbstractPlayer players[] = {
+            new Human("Amitay"),
+            new Computer("Alice"),
+            new Computer("Bob")
+        };
+        
+        dealCards(players);
+        for (AbstractPlayer player : players) {
+            config.addPlayer(player);
+            player.setGame(this);
+        }
+        
+        return config;
+    }
+
+    private void dealCards(AbstractPlayer[] players) {
+        Deck deck = new Deck();
+        deck.shuffle();
+        
+        int index = 0;
+        while (deck.size() > 0) {
+            Player player = players[index];
+            Card card = deck.deal();
+            player.addCard(card);
+            index = (index + 1) % players.length;
+        }
     }
 
 }

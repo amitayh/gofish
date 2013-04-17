@@ -1,10 +1,11 @@
 package gofish.swing;
 
 import gofish.model.Player;
-import gofish.swing.player.AbstractPlayer;
 import gofish.swing.player.PlayerPanel;
 import java.awt.GridLayout;
-import java.util.Collection;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JPanel;
@@ -19,7 +20,11 @@ public class GameBoardPanel extends JPanel {
     
     private Map<Player, PlayerPanel> playerPanels = new HashMap<>();
     
+    private MouseListener listener = new LastClickedListener();
+    
     private PlayerPanel current;
+    
+    private PlayerPanel lastClicked;
 
     public GameBoardPanel() {
         setLayout(new GridLayout(NUM_ROWS, NUM_COLS, GAP, GAP));
@@ -31,12 +36,15 @@ public class GameBoardPanel extends JPanel {
     }
     
     public PlayerPanel addPlayer(Player player) {
-        ((AbstractPlayer) player).setGameBoard(this);
-        PlayerPanel panel = new PlayerPanel(player);        
+        PlayerPanel panel = new PlayerPanel(player);
+        panel.addMouseListener(listener);
         playerPanels.put(player, panel);
         add(panel);
-        
         return panel;
+    }
+    
+    public PlayerPanel getPlayerPanel(Player player) {
+        return playerPanels.get(player);
     }
     
     public void setCurrentPlayer(Player player) {
@@ -47,9 +55,30 @@ public class GameBoardPanel extends JPanel {
         panel.isPlaying();
         current = panel;
     }
+    
+    synchronized public PlayerPanel getLastClicked() {
+        if (lastClicked == null) {
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        PlayerPanel temp = lastClicked;
+        lastClicked = null;
+        return temp;
+    }
+    
+    synchronized private void setLastClicked(PlayerPanel player) {
+        lastClicked = player;
+        this.notify();
+    }
 
-    public Collection<PlayerPanel> getPlayers() {
-        return playerPanels.values();
+    private class LastClickedListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            setLastClicked((PlayerPanel) e.getSource());
+        }
     }
 
 }

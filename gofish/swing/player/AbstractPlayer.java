@@ -2,21 +2,22 @@ package gofish.swing.player;
 
 import gofish.model.Player;
 import gofish.swing.GameBoardPanel;
+import gofish.swing.SwingGame;
 
 abstract public class AbstractPlayer extends Player {
     
-    private GameBoardPanel gameBoard;
+    private SwingGame game;
 
     public AbstractPlayer(Type type, String name) {
         super(type, name);
     }
-    
-    public void setGameBoard(GameBoardPanel gameBoard) {
-        this.gameBoard = gameBoard;
+
+    public SwingGame getGame() {
+        return game;
     }
 
-    public GameBoardPanel getGameBoard() {
-        return gameBoard;
+    public void setGame(SwingGame game) {
+        this.game = game;
     }
 
 }
