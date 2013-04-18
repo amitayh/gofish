@@ -1,7 +1,6 @@
 package gofish.swing.player;
 
 import gofish.model.Player;
-import gofish.swing.GameBoardPanel;
 import gofish.swing.SwingGame;
 
 abstract public class AbstractPlayer extends Player {

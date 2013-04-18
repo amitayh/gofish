@@ -1,7 +1,10 @@
 package gofish.swing;
 
+import gofish.swing.actions.NewGameAction;
+import gofish.swing.actions.AboutAction;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -18,9 +21,8 @@ public class Menu extends JMenuBar {
     private void buildMenu() {
         JMenu file = new JMenu("File");
         
-        JMenuItem newGame = new JMenuItem("New game");
-        ActionListener newGameAction = new NewGameAction(game);
-        newGame.addActionListener(newGameAction);
+        Action newGameAction = new NewGameAction(game);
+        JMenuItem newGame = new JMenuItem(newGameAction);
         
         JMenuItem restartGame = new JMenuItem("Restart game");
         
@@ -28,6 +30,7 @@ public class Menu extends JMenuBar {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                game.dispose();
                 System.exit(0);
             }
         });
@@ -40,9 +43,8 @@ public class Menu extends JMenuBar {
         
         JMenu help = new JMenu("Help");
         
-        JMenuItem about = new JMenuItem("About");
-        ActionListener aboutAction = new AboutAction(game);
-        about.addActionListener(aboutAction);
+        Action aboutAction = new AboutAction(game);
+        JMenuItem about = new JMenuItem(aboutAction);
         
         help.add(about);
         add(help);

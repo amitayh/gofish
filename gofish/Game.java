@@ -174,7 +174,7 @@ public class Game {
                 return config.getAllowMutipleRequests();
             } else {
                 // Go fish
-                renderer.goFish(player);
+                renderer.goFish(player, playerAsked);
             }
         }
         // Continue to next player
@@ -215,9 +215,9 @@ public class Game {
     }
     
     private void moveCard(Player from, Player to, Card card) {
-        renderer.moveCard(from, to, card);
         from.removeCard(card);
         Series series = to.addCard(card);
+        renderer.moveCard(from, to, card);
         if (series != null) {
             // Card completed a series
             availableCards.removeAll(series.getCards());

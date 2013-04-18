@@ -35,7 +35,7 @@ public class PlayerPanel extends javax.swing.JPanel {
         this.player = player;
         String name = SwingUtils.bold(player.getName());
         nameLabel.setText(name);
-        updateHandPanel(player);
+        updateHandPanel();
     }
     
     public void isPlaying() {
@@ -49,7 +49,7 @@ public class PlayerPanel extends javax.swing.JPanel {
     public void say(String message) {
         BalloonTip tip = new BalloonTip(nameLabel, message, BALLOON_STYLE, false);
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -60,7 +60,8 @@ public class PlayerPanel extends javax.swing.JPanel {
         return player;
     }
     
-    private void updateHandPanel(Player player) {
+    public void updateHandPanel() {
+        handPanel.removeAll();
         for (Card card : player.getHand()) {
             CardLabel cardLabel = new CardLabel(card);
             if (player.getType() == Player.Type.HUMAN) {

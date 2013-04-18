@@ -1,9 +1,14 @@
 package gofish.swing.player;
 
 import gofish.Game;
+import gofish.exception.NoCardsLeftException;
 import gofish.exception.PlayerQueryException;
+import gofish.model.Card;
+import gofish.model.CardsCollection;
 import gofish.model.Player;
 import gofish.swing.SwingGame;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JOptionPane;
 
 public class Human extends AbstractPlayer {
@@ -30,20 +35,33 @@ public class Human extends AbstractPlayer {
         return playerAsked;
     }
     
+    /*
+    private Set<Card> getCardName(Game game) {
+        Set<Card> foo = new HashSet<>();
+        CardsCollection hand = getHand();
+        for (String property : hand.properties()) {
+            Set<Card> cards = game.findCards(property);
+            if (cards.size() > hand.seriesSize(property)) {
+                for (Card card : cards) {
+                    if (!hand.contains(card)) {
+                        foo.add(card);
+                    }
+                }
+            }
+        }
+        return foo;
+    }
+    */
+    
     private String getCardName(Player playerAsked) {
         SwingGame game = getGame();
         game.setStatusBarText("Choose a card to ask from " + playerAsked.getName());
-        Object[] possibilities = {"ham", "spam", "yam"};
-        String cardName = (String) JOptionPane.showInputDialog(
+        return (String) JOptionPane.showInputDialog(
             game,
-            "Complete the sentence:\n\"Green eggs and...\"",
-            "Customized Dialog",
-            JOptionPane.PLAIN_MESSAGE,
-            null,
-            null, //possibilities,
-            "ham"
+            "Enter card's name:",
+            "Choose a Card",
+            JOptionPane.PLAIN_MESSAGE
         );
-        return cardName;
     }
     
     private Player getLastClicked() {
