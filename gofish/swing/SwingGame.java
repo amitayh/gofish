@@ -4,12 +4,8 @@ import gofish.Config;
 import gofish.GUIRenderer;
 import gofish.Game;
 import gofish.model.Card;
-import gofish.model.Deck;
 import gofish.model.Player;
 import gofish.model.Series;
-import gofish.swing.player.AbstractPlayer;
-import gofish.swing.player.Computer;
-import gofish.swing.player.Human;
 import gofish.swing.player.PlayerPanel;
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -19,13 +15,17 @@ import javax.swing.JOptionPane;
 
 public class SwingGame extends JFrame implements GUIRenderer, Runnable {
 
-    final private static int DEFAULT_WIDTH = 800;
+    final private static int DEFAULT_WIDTH = 1024;
     
-    final private static int DEFAULT_HEIGHT = 600;
+    final private static int DEFAULT_HEIGHT = 768;
     
     private GameBoardPanel gameBoard;
     
     private StatusBarPanel statusBar;
+    
+    private Config loadedConfig;
+    
+    private Thread gameThread;
 
     public SwingGame() {
         setTitle("GoFish");
@@ -58,18 +58,34 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
         statusBar.setText(text);
     }
     
+    public void start(Config config) {
+        stop();
+        loadedConfig = config;
+        gameThread = new Thread(this, "game");
+        gameThread.start();
+    }
+    
+    public void stop() {
+        if (gameThread != null) {
+            gameThread.interrupt();
+            try {
+                gameThread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            gameThread = null;
+        }
+    }
+    
     @Override
     public void run() {
-        Config config = getConfig(); // Temp, create from menu
-        Game game = new Game(this, config);
-        init(config);
-        
+        Game game = new Game(this, loadedConfig);
         game.start();
     }
 
-    private void init(Config config) {
+    private void initGameBoard() {
         gameBoard.clear();
-        for (Player player : config.getPlayers()) {
+        for (Player player : loadedConfig.getPlayers()) {
             gameBoard.addPlayer(player);
         }
         gameBoard.revalidate();
@@ -77,6 +93,8 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
 
     @Override
     public void startGame() {
+        initGameBoard();
+        
         String message = "Game is starting!";
         String title = "GoFish";
         int type = JOptionPane.INFORMATION_MESSAGE;
@@ -105,6 +123,12 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
 
     @Override
     public void playerQuery(Player.Query query) {
+        statusBar.setText(
+            query.getPlayerAsking().getName() + " asked " +
+            query.getPlayerAsked().getName() + " for card '" +
+            query.getCardName() + "'"
+        );
+        
         Player playerAsking = query.getPlayerAsking();
         Player playerAsked = query.getPlayerAsked();
         PlayerPanel panel = gameBoard.getPlayerPanel(playerAsking);
@@ -118,56 +142,31 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
 
     @Override
     public void moveCard(Player from, Player to, Card card) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        statusBar.setText(from.getName() + " gives card '" + card.getName() + "' to " + to.getName());
+        PlayerPanel fromPanel = gameBoard.getPlayerPanel(from);
+        PlayerPanel toPanel = gameBoard.getPlayerPanel(to);
+        fromPanel.updateHandPanel();
+        toPanel.updateHandPanel();
+        fromPanel.say("Yes I do, here you go!");
     }
 
     @Override
     public void seriesCompleted(Player player, Series series) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        statusBar.setText(player.getName() + " completed a series");
+        PlayerPanel panel = gameBoard.getPlayerPanel(player);
+        panel.updateCompletePanel();
     }
 
     @Override
-    public void goFish(Player player) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void goFish(Player playerAsking, Player playerAsked) {
+        statusBar.setText(playerAsking.getName() + " goes fishing\n");
+        PlayerPanel panel = gameBoard.getPlayerPanel(playerAsked);
+        panel.say("Go fish!");
     }
 
     @Override
     public void error(String message) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private Config getConfig() {
-        Config config = new Config();
-        
-        config.setAllowMutipleRequests(true);
-        config.setForceShowOfSeries(true);
-        
-        AbstractPlayer players[] = {
-            new Human("Amitay"),
-            new Computer("Alice"),
-            new Computer("Bob")
-        };
-        
-        dealCards(players);
-        for (AbstractPlayer player : players) {
-            config.addPlayer(player);
-            player.setGame(this);
-        }
-        
-        return config;
-    }
-
-    private void dealCards(AbstractPlayer[] players) {
-        Deck deck = new Deck();
-        deck.shuffle();
-        
-        int index = 0;
-        while (deck.size() > 0) {
-            Player player = players[index];
-            Card card = deck.deal();
-            player.addCard(card);
-            index = (index + 1) % players.length;
-        }
     }
 
 }

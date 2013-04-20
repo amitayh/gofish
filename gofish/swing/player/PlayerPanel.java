@@ -7,6 +7,7 @@ package gofish.swing.player;
 import gofish.model.Card;
 import gofish.model.Player;
 import gofish.swing.CardLabel;
+import gofish.swing.CompleteLabel;
 import gofish.swing.SwingUtils;
 import java.awt.Color;
 import net.java.balloontip.BalloonTip;
@@ -35,7 +36,7 @@ public class PlayerPanel extends javax.swing.JPanel {
         this.player = player;
         String name = SwingUtils.bold(player.getName());
         nameLabel.setText(name);
-        updateHandPanel();
+        updatePanels();
     }
     
     public void isPlaying() {
@@ -60,6 +61,19 @@ public class PlayerPanel extends javax.swing.JPanel {
         return player;
     }
     
+    public final void updatePanels() {
+        updateCompletePanel();
+        updateHandPanel();
+    }
+    
+    public void updateCompletePanel() {
+        completePanel.removeAll();
+        int numComplete = player.getCompleteSeries().size();
+        for (int i = 0; i < numComplete; i++) {
+            completePanel.add(new CompleteLabel());
+        }
+    }
+    
     public void updateHandPanel() {
         handPanel.removeAll();
         for (Card card : player.getHand()) {
@@ -69,6 +83,7 @@ public class PlayerPanel extends javax.swing.JPanel {
             }
             handPanel.add(cardLabel);
         }
+        handPanel.repaint();
     }
 
     /**
@@ -79,23 +94,41 @@ public class PlayerPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        topPanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
+        completePanel = new javax.swing.JPanel();
         handPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
 
+        topPanel.setOpaque(false);
+        topPanel.setLayout(new java.awt.BorderLayout());
+
         nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nameLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gofish/resources/images/user.png"))); // NOI18N
         nameLabel.setText("Player Name");
-        add(nameLabel, java.awt.BorderLayout.CENTER);
+        nameLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        nameLabel.setPreferredSize(new java.awt.Dimension(84, 84));
+        nameLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        topPanel.add(nameLabel, java.awt.BorderLayout.LINE_START);
 
-        handPanel.setPreferredSize(new java.awt.Dimension(400, 115));
+        completePanel.setOpaque(false);
+        completePanel.setPreferredSize(new java.awt.Dimension(100, 70));
+        completePanel.setRequestFocusEnabled(false);
+        topPanel.add(completePanel, java.awt.BorderLayout.CENTER);
+
+        add(topPanel, java.awt.BorderLayout.NORTH);
+
+        handPanel.setOpaque(false);
+        handPanel.setPreferredSize(new java.awt.Dimension(100, 115));
         handPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, -55, 5));
-        add(handPanel, java.awt.BorderLayout.PAGE_END);
+        add(handPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel completePanel;
     private javax.swing.JPanel handPanel;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
 
 }

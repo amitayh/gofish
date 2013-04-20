@@ -1,14 +1,9 @@
 package gofish.swing.player;
 
 import gofish.Game;
-import gofish.exception.NoCardsLeftException;
 import gofish.exception.PlayerQueryException;
-import gofish.model.Card;
-import gofish.model.CardsCollection;
 import gofish.model.Player;
 import gofish.swing.SwingGame;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.JOptionPane;
 
 public class Human extends AbstractPlayer {

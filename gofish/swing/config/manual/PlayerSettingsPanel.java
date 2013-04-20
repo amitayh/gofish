@@ -1,6 +1,7 @@
 package gofish.swing.config.manual;
 
 import gofish.model.Player.Type;
+import gofish.swing.player.AbstractPlayer;
 import gofish.swing.player.Computer;
 import gofish.swing.player.Human;
 import java.awt.event.ActionEvent;
@@ -32,9 +33,9 @@ public class PlayerSettingsPanel extends JPanel {
         state.setEnabled(false);
     }
     
-    public gofish.model.Player createPlayer() {
+    public AbstractPlayer createPlayer() {
         String playerName = name.getText();
-        gofish.model.Player player;
+        AbstractPlayer player;
         if (type.getSelectedItem() == Type.HUMAN) {
             player = new Human(playerName);
         } else {

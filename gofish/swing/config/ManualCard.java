@@ -8,6 +8,7 @@ import gofish.model.Player.Type;
 import gofish.swing.ConfigDialog;
 import gofish.swing.SwingGame;
 import gofish.swing.config.manual.PlayerSettingsPanel;
+import gofish.swing.player.AbstractPlayer;
 import java.awt.GridBagConstraints;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class ManualCard extends ConfigCard {
     
     private JCheckBox forceShowOfSeries;
     
-    private List<PlayerSettingsPanel> playerSettings;
+    private List<PlayerSettingsPanel> playersSettings;
     
     public ManualCard(SwingGame game, ConfigDialog dialog) {
         super(game, dialog);
@@ -33,7 +34,7 @@ public class ManualCard extends ConfigCard {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.WEST;
         
-        playerSettings = new LinkedList<>();
+        playersSettings = new LinkedList<>();
         for (int i = 0; i < Game.MAX_NUM_PLAYERS; i++) {
             Type type = (i == 0) ? Type.HUMAN : Type.COMPUTER;
             String name = "Player " + (i + 1);
@@ -47,7 +48,7 @@ public class ManualCard extends ConfigCard {
             }
             constraints.gridy = i;
             center.add(player, constraints);
-            playerSettings.add(player);
+            playersSettings.add(player);
         }
         
         constraints.gridy++;
@@ -65,9 +66,11 @@ public class ManualCard extends ConfigCard {
     public Config getConfig() {
         Config config = new Config();
         
-        for (PlayerSettingsPanel player : playerSettings) {
-            if (player.isEnabled()) {
-                config.addPlayer(player.createPlayer());
+        for (PlayerSettingsPanel playerSettings : playersSettings) {
+            if (playerSettings.isEnabled()) {
+                AbstractPlayer player = playerSettings.createPlayer();
+                player.setGame(game);
+                config.addPlayer(player);
             }
         }
         dealCards(config.getPlayers());

@@ -1,9 +1,7 @@
 package gofish.swing;
 
 import gofish.model.Card;
-import java.net.URL;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class CardLabel extends JLabel {
@@ -12,7 +10,7 @@ public class CardLabel extends JLabel {
     
     final private static int CARD_HEIGHT = 105;
     
-    final private static String IMAGES_PATH = "gofish/resources/images/cards/";
+    final private static String IMAGES_PATH = "cards/";
     
     final private static String IMAGE_EXTENSION = ".png";
     
@@ -54,13 +52,7 @@ public class CardLabel extends JLabel {
     }
     
     private static Icon getIcon(String name) {
-        Icon icon = null;
-        String fileName = IMAGES_PATH + name + IMAGE_EXTENSION;
-        URL url = CardLabel.class.getClassLoader().getResource(fileName);
-        if (url != null) {
-            icon = new ImageIcon(url);
-        }
-        return icon;
+        return SwingUtils.getIcon(IMAGES_PATH + name + IMAGE_EXTENSION);
     }
 
 }
