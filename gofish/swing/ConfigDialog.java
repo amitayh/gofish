@@ -48,7 +48,5 @@ public class ConfigDialog extends JDialog {
         }
         super.setVisible(flag);
     }
-    
-    
 
 }

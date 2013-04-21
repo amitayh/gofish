@@ -1,5 +1,6 @@
 package gofish.swing;
 
+import gofish.exception.InvalidQueryException;
 import gofish.Config;
 import gofish.GUIRenderer;
 import gofish.Game;
@@ -54,8 +55,12 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
         return gameBoard;
     }
     
-    public void setStatusBarText(String text) {
+    public void setMessage(String text) {
         statusBar.setText(text);
+    }
+    
+    public void setErrorMessage(String text) {
+        setMessage("<html><b color='red'>" + text + "</b></html>");
     }
     
     public void start(Config config) {
@@ -90,26 +95,28 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
         }
         gameBoard.revalidate();
     }
-
-    @Override
-    public void startGame() {
-        initGameBoard();
-        
-        String message = "Game is starting!";
+    
+    private void showInfoDialog(String message) {
         String title = "GoFish";
         int type = JOptionPane.INFORMATION_MESSAGE;
         JOptionPane.showMessageDialog(this, message, title, type);
     }
 
     @Override
+    public void startGame() {
+        initGameBoard();
+        showInfoDialog("Game is starting!");
+    }
+
+    @Override
     public void endGame(Player winner) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        showInfoDialog("Game ended! Winner is " + winner.getName());
     }
 
     @Override
     public void playerTurn(Player player) {
         gameBoard.setCurrentPlayer(player);
-        statusBar.setText(player.getName() + " is playing");
+        setMessage(player.getName() + " is playing");
     }
 
     @Override
@@ -118,12 +125,13 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
 
     @Override
     public void invalidQuery(Player.Query query) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // This shouldn't happen with Swing UI
+        throw new InvalidQueryException(query);
     }
 
     @Override
     public void playerQuery(Player.Query query) {
-        statusBar.setText(
+        setMessage(
             query.getPlayerAsking().getName() + " asked " +
             query.getPlayerAsked().getName() + " for card '" +
             query.getCardName() + "'"
@@ -137,36 +145,38 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
 
     @Override
     public void playerOut(Player player) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setMessage(player.getName() + " is out of the game!");
+        PlayerPanel panel = gameBoard.getPlayerPanel(player);
+        panel.playerOut();
     }
 
     @Override
     public void moveCard(Player from, Player to, Card card) {
-        statusBar.setText(from.getName() + " gives card '" + card.getName() + "' to " + to.getName());
+        setMessage(from.getName() + " gives card '" + card.getName() + "' to " + to.getName());
         PlayerPanel fromPanel = gameBoard.getPlayerPanel(from);
         PlayerPanel toPanel = gameBoard.getPlayerPanel(to);
+        fromPanel.say("Yes I do, here you go!");
         fromPanel.updateHandPanel();
         toPanel.updateHandPanel();
-        fromPanel.say("Yes I do, here you go!");
     }
 
     @Override
     public void seriesCompleted(Player player, Series series) {
-        statusBar.setText(player.getName() + " completed a series");
+        setMessage(player.getName() + " completed a series");
         PlayerPanel panel = gameBoard.getPlayerPanel(player);
         panel.updateCompletePanel();
     }
 
     @Override
     public void goFish(Player playerAsking, Player playerAsked) {
-        statusBar.setText(playerAsking.getName() + " goes fishing\n");
+        setMessage(playerAsking.getName() + " goes fishing\n");
         PlayerPanel panel = gameBoard.getPlayerPanel(playerAsked);
         panel.say("Go fish!");
     }
 
     @Override
     public void error(String message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setErrorMessage(message);
     }
 
 }

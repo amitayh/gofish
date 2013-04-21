@@ -31,10 +31,10 @@ public class Human extends AbstractPlayer {
     
     private Player getPlayerAsked() {
         SwingGame game = getGame();
-        game.setStatusBarText("Click on a player you want to ask a card from");
+        game.setMessage("Click on a player you want to ask a card from");
         Player playerAsked = getLastClicked();
         while (playerAsked == this) {
-            game.setStatusBarText("You can't choose yourself! Try again");
+            game.setErrorMessage("You can't choose yourself! Try again");
             playerAsked = getLastClicked();
         }
         return playerAsked;
@@ -58,7 +58,7 @@ public class Human extends AbstractPlayer {
     
     private String getCardName(String[] availableCards, Player playerAsked) {
         SwingGame game = getGame();
-        game.setStatusBarText("Choose a card to ask from " + playerAsked.getName());
+        game.setMessage("Choose a card to ask from " + playerAsked.getName());
         return (String) JOptionPane.showInputDialog(
             game,                       // Parent
             "Available cards:",         // Message
