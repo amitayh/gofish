@@ -2,8 +2,13 @@ package gofish.swing.player;
 
 import gofish.Game;
 import gofish.exception.PlayerQueryException;
+import gofish.model.Card;
+import gofish.model.CardsCollection;
 import gofish.model.Player;
 import gofish.swing.SwingGame;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import javax.swing.JOptionPane;
 
 public class Human extends AbstractPlayer {
@@ -15,7 +20,8 @@ public class Human extends AbstractPlayer {
     @Override
     public Query getQuery(Game game) throws PlayerQueryException {
         Player playerAsked = getPlayerAsked();
-        String cardName = getCardName(playerAsked);
+        List<String> availableCards = getAvailableCards(game);
+        String cardName = getCardName(availableCards, playerAsked);
         return new Query(playerAsked, cardName);
     }
     
@@ -30,33 +36,39 @@ public class Human extends AbstractPlayer {
         return playerAsked;
     }
     
-    /*
-    private Set<Card> getCardName(Game game) {
-        Set<Card> foo = new HashSet<>();
+    private List<String> getAvailableCards(Game game) {
+        List<String> availableCards = new LinkedList<>();
         CardsCollection hand = getHand();
         for (String property : hand.properties()) {
             Set<Card> cards = game.findCards(property);
             if (cards.size() > hand.seriesSize(property)) {
                 for (Card card : cards) {
                     if (!hand.contains(card)) {
-                        foo.add(card);
+                        availableCards.add(card.getName());
                     }
                 }
             }
         }
-        return foo;
+        return availableCards;
     }
-    */
     
-    private String getCardName(Player playerAsked) {
+    private String getCardName(List<String> availableCards, Player playerAsked) {
         SwingGame game = getGame();
         game.setStatusBarText("Choose a card to ask from " + playerAsked.getName());
-        return (String) JOptionPane.showInputDialog(
-            game,
-            "Enter card's name:",
-            "Choose a Card",
-            JOptionPane.PLAIN_MESSAGE
-        );
+        String[] values = availableCards.toArray(new String[availableCards.size()]);
+        Object cardName = null;
+        while (cardName == null) {
+            cardName = JOptionPane.showInputDialog(
+                game,                       // Parent
+                null,                       // Message
+                "Choose a Card",            // Title
+                JOptionPane.PLAIN_MESSAGE,  // Message type
+                null,                       // Icon
+                values,                     // Option values
+                null                        // Selected option
+            );
+        }
+        return (String) cardName;
     }
     
     private Player getLastClicked() {
