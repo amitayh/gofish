@@ -52,7 +52,10 @@ public class CardLabel extends JLabel {
     }
     
     private static Icon getIcon(String name) {
-        return SwingUtils.getIcon(IMAGES_PATH + name + IMAGE_EXTENSION);
+        return SwingUtils.getIcon(
+            // Convert "A of Spades" to "cards/a_of_spades.png"
+            IMAGES_PATH + name.replace(' ', '_').toLowerCase() + IMAGE_EXTENSION
+        );
     }
 
 }

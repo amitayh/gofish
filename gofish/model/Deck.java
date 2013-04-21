@@ -10,11 +10,11 @@ public class Deck {
     
     final private static String[] RANKS = {
         "2", "3", "4", "5", "6", "7", "8",
-        "9", "10", "j", "q", "k", "a"
+        "9", "10", "J", "Q", "K", "A"
     };
     
     final private static String[] SUITS = {
-        "d", "c", "h", "s"
+        "Diamonds", "Clubs", "Hearts", "Spades"
     };
     
     private LinkedList<Card> cards = new LinkedList<>();
@@ -22,7 +22,7 @@ public class Deck {
     public Deck() {
         for (String rank : RANKS) {
             for (String suit : SUITS) {
-                String name = rank + suit;
+                String name = rank + " of " + suit;
                 cards.add(new Card(name, rank));
             }
         }
