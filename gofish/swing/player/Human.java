@@ -19,9 +19,13 @@ public class Human extends AbstractPlayer {
 
     @Override
     public Query getQuery(Game game) throws PlayerQueryException {
-        Player playerAsked = getPlayerAsked();
-        List<String> availableCards = getAvailableCards(game);
-        String cardName = getCardName(availableCards, playerAsked);
+        String[] availableCards = getAvailableCards(game);
+        Player playerAsked = null;
+        String cardName = null;
+        while (cardName == null) {
+            playerAsked = getPlayerAsked();
+            cardName = getCardName(availableCards, playerAsked);
+        }
         return new Query(playerAsked, cardName);
     }
     
@@ -36,7 +40,7 @@ public class Human extends AbstractPlayer {
         return playerAsked;
     }
     
-    private List<String> getAvailableCards(Game game) {
+    private String[] getAvailableCards(Game game) {
         List<String> availableCards = new LinkedList<>();
         CardsCollection hand = getHand();
         for (String property : hand.properties()) {
@@ -49,26 +53,21 @@ public class Human extends AbstractPlayer {
                 }
             }
         }
-        return availableCards;
+        return availableCards.toArray(new String[availableCards.size()]);
     }
     
-    private String getCardName(List<String> availableCards, Player playerAsked) {
+    private String getCardName(String[] availableCards, Player playerAsked) {
         SwingGame game = getGame();
         game.setStatusBarText("Choose a card to ask from " + playerAsked.getName());
-        String[] values = availableCards.toArray(new String[availableCards.size()]);
-        Object cardName = null;
-        while (cardName == null) {
-            cardName = JOptionPane.showInputDialog(
-                game,                       // Parent
-                null,                       // Message
-                "Choose a Card",            // Title
-                JOptionPane.PLAIN_MESSAGE,  // Message type
-                null,                       // Icon
-                values,                     // Option values
-                null                        // Selected option
-            );
-        }
-        return (String) cardName;
+        return (String) JOptionPane.showInputDialog(
+            game,                       // Parent
+            "Available cards:",         // Message
+            "Choose a Card",            // Title
+            JOptionPane.PLAIN_MESSAGE,  // Message type
+            null,                       // Icon
+            availableCards,             // Option values
+            null                        // Selected option
+        );
     }
     
     private Player getLastClicked() {
