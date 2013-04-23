@@ -38,7 +38,7 @@ public class XMLCard extends ConfigCard {
     public void initComponents() {
         center.setBorder(new TitledBorder("XML Configuration"));
         
-        filenameField = new JTextField(COLUMNS);
+        filenameField = new JTextField("No file chosen", COLUMNS);
         filenameField.setEditable(false);
         center.add(filenameField);
         

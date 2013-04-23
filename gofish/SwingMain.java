@@ -6,9 +6,11 @@ import gofish.model.Deck;
 import gofish.model.Player;
 import gofish.swing.SwingGame;
 import gofish.swing.SwingUtils;
+import gofish.swing.actions.NewGameAction;
 import gofish.swing.player.AbstractPlayer;
 import gofish.swing.player.Computer;
 import gofish.swing.player.Human;
+import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
 public class SwingMain {
@@ -18,8 +20,12 @@ public class SwingMain {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                // Open frame
                 SwingGame game = new SwingGame();
                 game.setVisible(true);
+                // Open config dialog
+                Action action = new NewGameAction(game);
+                action.actionPerformed(null);
             }
         });
     }
