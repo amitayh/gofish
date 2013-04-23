@@ -60,7 +60,7 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     }
     
     public void setErrorMessage(String text) {
-        setMessage("<html><b color='red'>" + text + "</b></html>");
+        setMessage(SwingUtils.error(text));
     }
     
     public void start(Config config) {

@@ -80,9 +80,9 @@ public class XMLCard extends ConfigCard {
         try {
             factory.validate(file);
             config = factory.getConfig();
-            startButton.setEnabled(true);
+            clearError();
         } catch (ConfigValidationException e) {
-            startButton.setEnabled(false);
+            setError(e.getMessage());
         }
     }
     

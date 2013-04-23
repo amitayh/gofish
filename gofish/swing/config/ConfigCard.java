@@ -3,6 +3,7 @@ package gofish.swing.config;
 import gofish.config.ConfigFactory;
 import gofish.swing.ConfigDialog;
 import gofish.swing.SwingGame;
+import gofish.swing.SwingUtils;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
@@ -10,6 +11,7 @@ import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -23,6 +25,8 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
     
     protected SwingGame game;
     
+    private JLabel errorLabel;
+    
     private ConfigDialog dialog;
     
     public ConfigCard(SwingGame game, ConfigDialog dialog) {
@@ -34,6 +38,9 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
 
     private void initUI() {
         setBorder(new EmptyBorder(5, 5, 5, 5));
+        
+        errorLabel = new JLabel();
+        add(errorLabel, BorderLayout.PAGE_START);
         
         center = new JPanel(new GridBagLayout());
         add(center, BorderLayout.CENTER);
@@ -62,6 +69,16 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
         bottom.add(startButton);
         
         initComponents();
+    }
+    
+    protected void setError(String text) {
+        errorLabel.setText(SwingUtils.error(text));
+        startButton.setEnabled(false);
+    }
+    
+    protected void clearError() {
+        errorLabel.setText("");
+        startButton.setEnabled(true);
     }
     
     abstract protected void initComponents();

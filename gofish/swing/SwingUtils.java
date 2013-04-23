@@ -21,6 +21,10 @@ public class SwingUtils {
         return "<html><b>" + text + "</b></html>";
     }
     
+    public static String error(String text) {
+        return "<html><b color='red'>" + text + "</b></html>";
+    }
+    
     public static Icon getIcon(String name) {
         Icon icon = null;
         String fileName = IMAGES_PATH + name;

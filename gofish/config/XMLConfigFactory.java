@@ -75,8 +75,7 @@ abstract public class XMLConfigFactory implements ConfigFactory {
             Document doc = builder.parse(file);
             root = doc.getDocumentElement();
         } catch (SAXException e) {
-            String message = "Schema validation failed - " + e.getMessage();
-            throw new ConfigValidationException(message);
+            throw new ConfigValidationException("Schema validation failed");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
