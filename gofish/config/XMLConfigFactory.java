@@ -18,7 +18,9 @@ import javax.xml.validation.SchemaFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 abstract public class XMLConfigFactory implements ConfigFactory {
@@ -67,7 +69,7 @@ abstract public class XMLConfigFactory implements ConfigFactory {
             URL url = this.getClass().getClassLoader().getResource(SCHEMA_FILE);
             factory.setSchema(schemaFactory.newSchema(url));
             builder = factory.newDocumentBuilder();
-            builder.setErrorHandler(new DefaultHandler()); // Suppress warnings
+            builder.setErrorHandler(new ExceptionErrorHandler());
         } catch (SAXException | ParserConfigurationException e) {
             throw new RuntimeException(e);
         }
@@ -154,5 +156,24 @@ abstract public class XMLConfigFactory implements ConfigFactory {
     }
     
     abstract protected Player createPlayer(Player.Type type, String name);
+    
+    private static class ExceptionErrorHandler implements ErrorHandler {
+
+        @Override
+        public void warning(SAXParseException e) throws SAXException {
+            throw e;
+        }
+
+        @Override
+        public void error(SAXParseException e) throws SAXException {
+            throw e;
+        }
+
+        @Override
+        public void fatalError(SAXParseException e) throws SAXException {
+            throw e;
+        }
+        
+    }
 
 }
