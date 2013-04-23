@@ -19,6 +19,8 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
     
     protected JPanel bottom;
     
+    protected JButton startButton;
+    
     protected SwingGame game;
     
     private ConfigDialog dialog;
@@ -40,24 +42,24 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
         bottom = new JPanel(layout);
         add(bottom, BorderLayout.PAGE_END);
         
-        JButton back = new JButton("Back");
-        back.addActionListener(new ActionListener() {
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dialog.showCard(ConfigDialog.MAIN);
             }
         });
-        bottom.add(back);
+        bottom.add(backButton);
         
-        JButton start = new JButton("Start game");
-        start.addActionListener(new ActionListener() {
+        startButton = new JButton("Start game");
+        startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dialog.setVisible(false);
                 game.start(getConfig());
             }
         });
-        bottom.add(start);
+        bottom.add(startButton);
         
         initComponents();
     }
