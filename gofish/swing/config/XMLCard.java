@@ -27,6 +27,8 @@ public class XMLCard extends ConfigCard {
     private JFileChooser chooser;
     
     private Config config;
+    
+    private XMLConfigFactory factory;
 
     public XMLCard(SwingGame game, ConfigDialog dialog) {
         super(game, dialog);
@@ -44,6 +46,8 @@ public class XMLCard extends ConfigCard {
         FileFilter filter = new FileNameExtensionFilter("XML files", "xml");
         chooser.removeChoosableFileFilter(chooser.getFileFilter());
         chooser.addChoosableFileFilter(filter);
+        
+        factory = new Factory();
         
         JButton chooseFileButton = new JButton("Choose file");
         chooseFileButton.addActionListener(new ActionListener() {
@@ -75,8 +79,6 @@ public class XMLCard extends ConfigCard {
 
     private void chooseFile(File file) {
         filenameField.setText(file.getAbsolutePath());
-        XMLConfigFactory factory = new Factory();
-        
         try {
             factory.validate(file);
             config = factory.getConfig();
@@ -86,7 +88,7 @@ public class XMLCard extends ConfigCard {
         }
     }
     
-    private class Factory extends XMLConfigFactory {
+    private static class Factory extends XMLConfigFactory {
 
         @Override
         protected Player createPlayer(Player.Type type, String name) {

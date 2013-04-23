@@ -28,11 +28,13 @@ abstract public class XMLConfigFactory implements ConfigFactory {
     
     final private static String TYPE_HUMAN = "HUMAN";
     
-    private File file;
-    
-    private Element root;
-    
     private Config config;
+    
+    private DocumentBuilder builder;
+    
+    public XMLConfigFactory() {
+        createDocumentBuilder();
+    }
     
     @Override
     public Config getConfig() {
@@ -40,26 +42,17 @@ abstract public class XMLConfigFactory implements ConfigFactory {
     }
     
     public void validate(File file) throws ConfigValidationException {
-        this.file = file;
-        validateFile();
-        setRootElement();
-        createConfig();
+        config = null;
+        Element root = getRootElement(file);
+        config = createConfig(root);
         config.validate();
-    }    
-    
-    private void validateFile() {
-        if (!file.exists() || !file.isFile()) {
-            throw new ConfigValidationException("File does not exist");
-        }
     }
     
-    private void setRootElement() {
+    private void createDocumentBuilder() throws RuntimeException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setIgnoringElementContentWhitespace(true);
         factory.setIgnoringComments(true);
         factory.setNamespaceAware(true);
-        
-        DocumentBuilder builder;
         try {
             // XSD schema validation
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -70,29 +63,33 @@ abstract public class XMLConfigFactory implements ConfigFactory {
         } catch (SAXException | ParserConfigurationException e) {
             throw new RuntimeException(e);
         }
-        
+    }
+    
+    private Element getRootElement(File file) {
+        Element root = null;
         try {
             Document doc = builder.parse(file);
             root = doc.getDocumentElement();
         } catch (SAXException e) {
-            throw new ConfigValidationException("Schema validation failed");
+            throw new ConfigValidationException("Schema validation failed", e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ConfigValidationException("File does not exist", e);
         }
+        return root;
     }
     
-    private void createConfig() {
-        config = new Config();
+    private Config createConfig(Element root) {
+        Config newConfig = new Config();
         
         Node settings = root.getElementsByTagName("settings").item(0);
         for (Node node = settings.getFirstChild(); node != null; node = node.getNextSibling()) {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 switch (node.getNodeName()) {
                     case "allowMutipleRequests":
-                        config.setAllowMutipleRequests(getBooleanValue(node));
+                        newConfig.setAllowMutipleRequests(getBooleanValue(node));
                         break;
                     case "forceShowOfSeries":
-                        config.setForceShowOfSeries(getBooleanValue(node));
+                        newConfig.setForceShowOfSeries(getBooleanValue(node));
                         break;
                 }
             }
@@ -102,9 +99,11 @@ abstract public class XMLConfigFactory implements ConfigFactory {
         for (Node node = players.getFirstChild(); node != null; node = node.getNextSibling()) {
             if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("player")) {
                 Player player = getPlayer((Element) node);
-                config.addPlayer(player);
+                newConfig.addPlayer(player);
             }
         }
+        
+        return newConfig;
     }
     
     private Player getPlayer(Element playerElement) {
