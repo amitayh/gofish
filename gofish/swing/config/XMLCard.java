@@ -42,13 +42,6 @@ public class XMLCard extends ConfigCard {
         filenameField.setEditable(false);
         center.add(filenameField);
         
-        chooser = new JFileChooser();
-        FileFilter filter = new FileNameExtensionFilter("XML files", "xml");
-        chooser.removeChoosableFileFilter(chooser.getFileFilter());
-        chooser.addChoosableFileFilter(filter);
-        
-        factory = new Factory();
-        
         JButton chooseFileButton = new JButton("Choose file");
         chooseFileButton.addActionListener(new ActionListener() {
             @Override
@@ -68,9 +61,10 @@ public class XMLCard extends ConfigCard {
     }
     
     private void openFileChooser() {
-        int option = chooser.showOpenDialog(this);
+        JFileChooser fc = getFileChooser();
+        int option = fc.showOpenDialog(this);
         if (option == JFileChooser.APPROVE_OPTION) {
-            File selected = chooser.getSelectedFile();
+            File selected = fc.getSelectedFile();
             if (selected.isFile()) {
                 chooseFile(selected);
             }
@@ -79,13 +73,31 @@ public class XMLCard extends ConfigCard {
 
     private void chooseFile(File file) {
         filenameField.setText(file.getAbsolutePath());
+        XMLConfigFactory cf = getConfigFactory();
         try {
-            factory.validate(file);
-            config = factory.getConfig();
+            cf.validate(file);
+            config = cf.getConfig();
             clearError();
         } catch (ConfigValidationException e) {
             setError(e.getMessage());
         }
+    }
+
+    private JFileChooser getFileChooser() {
+        if (chooser == null) {
+            chooser = new JFileChooser();
+            FileFilter filter = new FileNameExtensionFilter("XML files", "xml");
+            chooser.removeChoosableFileFilter(chooser.getFileFilter());
+            chooser.addChoosableFileFilter(filter);
+        }
+        return chooser;
+    }
+
+    private XMLConfigFactory getConfigFactory() {
+        if (factory == null) {
+            factory = new Factory();
+        }
+        return factory;
     }
     
     private static class Factory extends XMLConfigFactory {

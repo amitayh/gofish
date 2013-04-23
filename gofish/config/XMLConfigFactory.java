@@ -32,10 +32,6 @@ abstract public class XMLConfigFactory implements ConfigFactory {
     
     private DocumentBuilder builder;
     
-    public XMLConfigFactory() {
-        createDocumentBuilder();
-    }
-    
     @Override
     public Config getConfig() {
         return config;
@@ -48,27 +44,31 @@ abstract public class XMLConfigFactory implements ConfigFactory {
         config.validate();
     }
     
-    private void createDocumentBuilder() throws RuntimeException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setIgnoringElementContentWhitespace(true);
-        factory.setIgnoringComments(true);
-        factory.setNamespaceAware(true);
-        try {
-            // XSD schema validation
-            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            URL url = this.getClass().getClassLoader().getResource(SCHEMA_FILE);
-            factory.setSchema(schemaFactory.newSchema(url));
-            builder = factory.newDocumentBuilder();
-            builder.setErrorHandler(new ExceptionErrorHandler());
-        } catch (SAXException | ParserConfigurationException e) {
-            throw new RuntimeException(e);
+    private DocumentBuilder getDocumentBuilder() {
+        if (builder == null) {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setIgnoringElementContentWhitespace(true);
+            factory.setIgnoringComments(true);
+            factory.setNamespaceAware(true);
+            try {
+                // XSD schema validation
+                SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+                URL url = this.getClass().getClassLoader().getResource(SCHEMA_FILE);
+                factory.setSchema(schemaFactory.newSchema(url));
+                builder = factory.newDocumentBuilder();
+                builder.setErrorHandler(new ExceptionErrorHandler());
+            } catch (SAXException | ParserConfigurationException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return builder;
     }
     
     private Element getRootElement(File file) {
         Element root = null;
         try {
-            Document doc = builder.parse(file);
+            DocumentBuilder db = getDocumentBuilder();
+            Document doc = db.parse(file);
             root = doc.getDocumentElement();
         } catch (SAXException e) {
             throw new ConfigValidationException("Schema validation failed", e);
