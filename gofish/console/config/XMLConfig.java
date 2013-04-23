@@ -1,7 +1,7 @@
 package gofish.console.config;
 
-import gofish.Config;
-import gofish.ConfigFactory;
+import gofish.config.Config;
+import gofish.config.ConfigFactory;
 import gofish.config.XMLConfigFactory;
 import gofish.console.player.Computer;
 import gofish.console.player.Human;

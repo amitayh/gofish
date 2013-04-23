@@ -1,6 +1,6 @@
 package gofish.swing.config;
 
-import gofish.Config;
+import gofish.config.Config;
 import gofish.config.XMLConfigFactory;
 import gofish.exception.ConfigValidationException;
 import gofish.model.Player;

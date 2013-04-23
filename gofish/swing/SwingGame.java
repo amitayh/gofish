@@ -1,7 +1,7 @@
 package gofish.swing;
 
 import gofish.exception.InvalidQueryException;
-import gofish.Config;
+import gofish.config.Config;
 import gofish.GUIRenderer;
 import gofish.Game;
 import gofish.model.Card;

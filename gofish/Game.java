@@ -1,5 +1,6 @@
 package gofish;
 
+import gofish.config.Config;
 import com.google.common.collect.Iterators;
 import gofish.model.CardsCollection;
 import gofish.model.Player;

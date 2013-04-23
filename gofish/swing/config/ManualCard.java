@@ -1,6 +1,6 @@
 package gofish.swing.config;
 
-import gofish.Config;
+import gofish.config.Config;
 import gofish.Game;
 import gofish.model.Card;
 import gofish.model.Deck;

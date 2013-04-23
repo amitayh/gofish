@@ -1,5 +1,6 @@
 package gofish;
 
+import gofish.config.Config;
 import gofish.model.Card;
 import gofish.model.Deck;
 import gofish.model.Player;

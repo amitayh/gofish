@@ -1,7 +1,5 @@
 package gofish.config;
 
-import gofish.Config;
-import gofish.ConfigFactory;
 import gofish.exception.ConfigValidationException;
 import gofish.model.Card;
 import gofish.model.Player;
@@ -21,7 +19,6 @@ import org.w3c.dom.Node;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
 
 abstract public class XMLConfigFactory implements ConfigFactory {
     
