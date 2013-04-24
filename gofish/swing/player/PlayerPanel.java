@@ -103,7 +103,7 @@ public class PlayerPanel extends javax.swing.JPanel {
         topPanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
         completePanel = new javax.swing.JPanel();
-        handPanel = new javax.swing.JPanel();
+        handPanel = new gofish.swing.player.CardsPanel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -124,15 +124,11 @@ public class PlayerPanel extends javax.swing.JPanel {
         topPanel.add(completePanel, java.awt.BorderLayout.CENTER);
 
         add(topPanel, java.awt.BorderLayout.NORTH);
-
-        handPanel.setOpaque(false);
-        handPanel.setPreferredSize(new java.awt.Dimension(100, 115));
-        handPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, -55, 5));
         add(handPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel completePanel;
-    private javax.swing.JPanel handPanel;
+    private gofish.swing.player.CardsPanel handPanel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables

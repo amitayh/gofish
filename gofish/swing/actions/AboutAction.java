@@ -7,16 +7,25 @@ import javax.swing.AbstractAction;
 
 public class AboutAction extends AbstractAction {
     
+    private SwingGame game;
+    
     private AboutDialog aboutDialog;
 
     public AboutAction(SwingGame game) {
         super("About");
-        aboutDialog = new AboutDialog(game);
+        this.game = game;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        aboutDialog.setVisible(true);
+        getAboutDialog().setVisible(true);
+    }
+    
+    private AboutDialog getAboutDialog() {
+        if (aboutDialog == null) {
+            aboutDialog = new AboutDialog(game);
+        }
+        return aboutDialog;
     }
 
 }

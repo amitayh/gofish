@@ -26,6 +26,8 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     
     private Config loadedConfig;
     
+    private Config previousConfig;
+    
     private Thread gameThread;
 
     public SwingGame() {
@@ -66,6 +68,7 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     public void start(Config config) {
         stop();
         loadedConfig = config;
+        previousConfig = config.clone();
         gameThread = new Thread(this, "game");
         gameThread.start();
     }
@@ -77,9 +80,14 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
                 gameThread.join();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
+            } finally {
+                gameThread = null;
             }
-            gameThread = null;
         }
+    }
+    
+    public void restart() {
+        start(previousConfig);
     }
     
     @Override

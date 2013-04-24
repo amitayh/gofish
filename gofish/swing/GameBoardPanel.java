@@ -1,5 +1,6 @@
 package gofish.swing;
 
+import gofish.exception.GameStoppedException;
 import gofish.model.Player;
 import gofish.swing.player.PlayerPanel;
 import java.awt.GridLayout;
@@ -61,7 +62,7 @@ public class GameBoardPanel extends JPanel {
             try {
                 this.wait();
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                throw new GameStoppedException(e);
             }
         }
         PlayerPanel temp = lastClicked;

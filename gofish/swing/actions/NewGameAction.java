@@ -10,7 +10,7 @@ public class NewGameAction extends AbstractAction {
     
     private SwingGame game;
     
-    private ConfigDialog configDialog = null;
+    private ConfigDialog configDialog;
 
     public NewGameAction(SwingGame game) {
         super("New game");

@@ -2,6 +2,7 @@ package gofish.swing;
 
 import gofish.swing.actions.NewGameAction;
 import gofish.swing.actions.AboutAction;
+import gofish.swing.actions.RestartGameAction;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Action;
@@ -19,12 +20,20 @@ public class Menu extends JMenuBar {
     }
 
     private void buildMenu() {
-        JMenu file = new JMenu("File");
+        add(buildFileMenu());
+        add(buildHelpMenu());
+    }
+    
+    private JMenu buildFileMenu() {
+        JMenu menu = new JMenu("File");
         
-        Action newGameAction = new NewGameAction(game);
-        JMenuItem newGame = new JMenuItem(newGameAction);
+        Action newGame = new NewGameAction(game);
+        menu.add(newGame);
         
-        JMenuItem restartGame = new JMenuItem("Restart game");
+        Action restartGame = new RestartGameAction(game);
+        menu.add(restartGame);
+        
+        menu.addSeparator();
         
         JMenuItem exit = new JMenuItem("Exit");
         exit.addActionListener(new ActionListener() {
@@ -33,21 +42,19 @@ public class Menu extends JMenuBar {
                 game.dispose();
                 System.exit(0);
             }
-        });
+        });        
+        menu.add(exit);
         
-        file.add(newGame);
-        file.add(restartGame);
-        file.addSeparator();
-        file.add(exit);
-        add(file);
+        return menu;
+    }
+
+    private JMenu buildHelpMenu() {
+        JMenu menu = new JMenu("Help");
         
-        JMenu help = new JMenu("Help");
+        Action about = new AboutAction(game);        
+        menu.add(about);
         
-        Action aboutAction = new AboutAction(game);
-        JMenuItem about = new JMenuItem(aboutAction);
-        
-        help.add(about);
-        add(help);
+        return menu;
     }
 
 }
