@@ -34,6 +34,7 @@ public class GameBoardPanel extends JPanel {
     public void clear() {
         playerPanels.clear();
         removeAll();
+        repaint();
     }
     
     public PlayerPanel addPlayer(Player player) {

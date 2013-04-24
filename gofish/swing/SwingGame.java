@@ -67,10 +67,12 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     
     public void start(Config config) {
         stop();
-        loadedConfig = config;
-        previousConfig = config.clone();
-        gameThread = new Thread(this, "game");
-        gameThread.start();
+        if (config != null) {
+            loadedConfig = config;
+            previousConfig = config.clone();
+            gameThread = new Thread(this, "game");
+            gameThread.start();
+        }
     }
     
     public void stop() {
@@ -84,6 +86,8 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
                 gameThread = null;
             }
         }
+        gameBoard.clear();
+        setMessage("Ready");
     }
     
     public void restart() {
