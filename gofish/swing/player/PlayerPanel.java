@@ -4,6 +4,7 @@
  */
 package gofish.swing.player;
 
+import gofish.exception.GameStoppedException;
 import gofish.model.Card;
 import gofish.model.Player;
 import gofish.swing.CardLabel;
@@ -52,9 +53,10 @@ public class PlayerPanel extends javax.swing.JPanel {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new GameStoppedException(e);
+        } finally {
+            tip.closeBalloon();
         }
-        tip.closeBalloon();
     }
     
     public Player getPlayer() {
@@ -87,7 +89,7 @@ public class PlayerPanel extends javax.swing.JPanel {
     }
     
     public void playerOut() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setEnabled(false);
     }
 
     /**

@@ -6,6 +6,7 @@ import gofish.model.CardsCollection;
 import gofish.model.Player;
 import gofish.model.Card;
 import gofish.exception.GameStatusException;
+import gofish.exception.GameStoppedException;
 import gofish.exception.PlayerQueryException;
 import gofish.model.Series;
 import java.util.Collections;
@@ -68,11 +69,16 @@ public class Game {
         renderer.startGame();
         setAvailableCards();
         
-        // Main game loop
-        loop();
-        
-        // End game
-        end();
+        try {
+            // Main game loop
+            loop();
+            
+            // End game
+            end();
+        } catch (GameStoppedException e) {
+            // Game stopped unexpectedly
+            status = Status.ENDED;
+        }
     }
     
     public void end() {
