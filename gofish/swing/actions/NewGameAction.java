@@ -1,6 +1,6 @@
 package gofish.swing.actions;
 
-import gofish.swing.ConfigDialog;
+import gofish.swing.config.ConfigDialog;
 import gofish.swing.SwingGame;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;

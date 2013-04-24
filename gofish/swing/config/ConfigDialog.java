@@ -1,5 +1,6 @@
-package gofish.swing;
+package gofish.swing.config;
 
+import gofish.swing.SwingGame;
 import gofish.swing.config.MainCard;
 import gofish.swing.config.ManualCard;
 import gofish.swing.config.XMLCard;

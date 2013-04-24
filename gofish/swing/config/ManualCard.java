@@ -5,7 +5,6 @@ import gofish.Game;
 import gofish.model.Card;
 import gofish.model.Deck;
 import gofish.model.Player.Type;
-import gofish.swing.ConfigDialog;
 import gofish.swing.SwingGame;
 import gofish.swing.config.manual.PlayerSettingsPanel;
 import gofish.swing.player.AbstractPlayer;

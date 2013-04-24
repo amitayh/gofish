@@ -1,7 +1,6 @@
 package gofish.swing.config;
 
 import gofish.config.ConfigFactory;
-import gofish.swing.ConfigDialog;
 import gofish.swing.SwingGame;
 import gofish.swing.SwingUtils;
 import java.awt.BorderLayout;

@@ -4,7 +4,6 @@ import gofish.config.Config;
 import gofish.config.XMLConfigFactory;
 import gofish.exception.ConfigValidationException;
 import gofish.model.Player;
-import gofish.swing.ConfigDialog;
 import gofish.swing.SwingGame;
 import gofish.swing.player.Computer;
 import gofish.swing.player.Human;

@@ -1,6 +1,5 @@
 package gofish.swing.config;
 
-import gofish.swing.ConfigDialog;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
