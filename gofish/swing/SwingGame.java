@@ -71,6 +71,7 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
             loadedConfig = config;
             previousConfig = config.clone();
             gameThread = new Thread(this, "game");
+            gameThread.setDaemon(true);
             gameThread.start();
         }
     }

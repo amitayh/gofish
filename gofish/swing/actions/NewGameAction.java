@@ -3,18 +3,14 @@ package gofish.swing.actions;
 import gofish.swing.config.ConfigDialog;
 import gofish.swing.SwingGame;
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
 public class NewGameAction extends AbstractAction {
     
-    private SwingGame game;
-    
     private ConfigDialog configDialog;
 
     public NewGameAction(SwingGame game) {
-        super("New game");
-        this.game = game;
+        super(game, "New game");
     }
 
     @Override
