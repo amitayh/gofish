@@ -1,15 +1,16 @@
 package gofish.swing.config;
 
 import gofish.swing.SwingGame;
-import gofish.swing.config.MainCard;
-import gofish.swing.config.ManualCard;
-import gofish.swing.config.XMLCard;
 import java.awt.CardLayout;
 import java.awt.Container;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 public class ConfigDialog extends JDialog {
+    
+    final private static int DEFAULT_WIDTH = 350;
+    
+    final private static int DEFAULT_HEIGHT = 350;
     
     final public static String MAIN = "main";
     
@@ -31,7 +32,7 @@ public class ConfigDialog extends JDialog {
         contentPane.add(manual, MANUAL);
         contentPane.add(xml, XML);
         
-        pack();
+        setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setResizable(false);
     }
     

@@ -10,8 +10,12 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class PlayerSettingsPanel extends JPanel {
+    
+    final public static String NAME_CHANGE_EVENT = "name_change";
     
     final private static Type[] TYPES = {Type.HUMAN, Type.COMPUTER};
     
@@ -43,6 +47,10 @@ public class PlayerSettingsPanel extends JPanel {
         }
         return player;
     }
+    
+    public String getName() {
+        return name.getText();
+    }
 
     private void init() {
         state = new JCheckBox();
@@ -59,7 +67,25 @@ public class PlayerSettingsPanel extends JPanel {
         add(type);
         
         name = new JTextField(COLUMNS);
+        name.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                fireNameChangeEvent();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                fireNameChangeEvent();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                fireNameChangeEvent();
+            }
+        });
         add(name);
+    }
+    
+    private void fireNameChangeEvent() {
+        firePropertyChange(NAME_CHANGE_EVENT, false, true);
     }
     
     @Override

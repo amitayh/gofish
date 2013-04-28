@@ -38,15 +38,18 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
     private void initUI() {
         setBorder(new EmptyBorder(5, 5, 5, 5));
         
-        errorLabel = new JLabel();
-        add(errorLabel, BorderLayout.PAGE_START);
-        
         center = new JPanel(new GridBagLayout());
         add(center, BorderLayout.CENTER);
         
-        LayoutManager layout = new FlowLayout(FlowLayout.RIGHT);
-        bottom = new JPanel(layout);
+        bottom = new JPanel(new BorderLayout());
         add(bottom, BorderLayout.PAGE_END);
+        
+        errorLabel = new JLabel();
+        bottom.add(errorLabel, BorderLayout.PAGE_START);
+        
+        LayoutManager layout = new FlowLayout(FlowLayout.RIGHT);
+        JPanel buttonsBar = new JPanel(layout);
+        bottom.add(buttonsBar, BorderLayout.CENTER);
         
         JButton backButton = new JButton("Back");
         backButton.addActionListener(new ActionListener() {
@@ -55,7 +58,7 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
                 dialog.showCard(ConfigDialog.MAIN);
             }
         });
-        bottom.add(backButton);
+        buttonsBar.add(backButton);
         
         startButton = new JButton("Start game");
         startButton.addActionListener(new ActionListener() {
@@ -65,7 +68,7 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
                 game.start(getConfig());
             }
         });
-        bottom.add(startButton);
+        buttonsBar.add(startButton);
         
         initComponents();
     }
