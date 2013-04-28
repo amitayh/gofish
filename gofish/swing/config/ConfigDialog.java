@@ -8,9 +8,9 @@ import javax.swing.JPanel;
 
 public class ConfigDialog extends JDialog {
     
-    final private static int DEFAULT_WIDTH = 350;
+    final private static int DEFAULT_WIDTH = 450;
     
-    final private static int DEFAULT_HEIGHT = 350;
+    final private static int DEFAULT_HEIGHT = 400;
     
     final public static String MAIN = "main";
     

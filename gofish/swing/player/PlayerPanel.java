@@ -9,9 +9,9 @@ import gofish.model.Card;
 import gofish.model.Player;
 import gofish.model.Series;
 import gofish.swing.CardLabel;
-import gofish.swing.CompleteLabel;
 import gofish.swing.SwingUtils;
 import java.awt.Color;
+import java.awt.Dimension;
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.styles.BalloonTipStyle;
 import net.java.balloontip.styles.RoundedBalloonStyle;
@@ -75,6 +75,7 @@ public class PlayerPanel extends javax.swing.JPanel {
         completePanel.removeAll();
         for (Series series : player.getCompleteSeries()) {
             CardsPanel seriesPanel = new CardsPanel();
+            seriesPanel.setPreferredSize(new Dimension(150, 150));
             for (Card card : series.getCards()) {
                 CardLabel cardLabel = new CardLabel(card);
                 cardLabel.setRevealed(showCompletedSeries);
@@ -134,6 +135,7 @@ public class PlayerPanel extends javax.swing.JPanel {
         completePanel.setOpaque(false);
         completePanel.setPreferredSize(new java.awt.Dimension(100, 70));
         completePanel.setRequestFocusEnabled(false);
+        completePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
         topPanel.add(completePanel, java.awt.BorderLayout.CENTER);
 
         add(topPanel, java.awt.BorderLayout.NORTH);
