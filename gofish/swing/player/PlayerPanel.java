@@ -7,6 +7,7 @@ package gofish.swing.player;
 import gofish.exception.GameStoppedException;
 import gofish.model.Card;
 import gofish.model.Player;
+import gofish.model.Series;
 import gofish.swing.CardLabel;
 import gofish.swing.CompleteLabel;
 import gofish.swing.SwingUtils;
@@ -27,6 +28,8 @@ public class PlayerPanel extends javax.swing.JPanel {
         new RoundedBalloonStyle(5 ,5, Color.WHITE, Color.BLACK);
     
     private Player player;
+    
+    private boolean showCompletedSeries = false;
 
     /**
      * Creates new form PlayerPanel
@@ -70,17 +73,23 @@ public class PlayerPanel extends javax.swing.JPanel {
     
     public void updateCompletePanel() {
         completePanel.removeAll();
-        int numComplete = player.getCompleteSeries().size();
-        for (int i = 0; i < numComplete; i++) {
-            completePanel.add(new CompleteLabel());
+        for (Series series : player.getCompleteSeries()) {
+            CardsPanel seriesPanel = new CardsPanel();
+            for (Card card : series.getCards()) {
+                CardLabel cardLabel = new CardLabel(card);
+                cardLabel.setRevealed(showCompletedSeries);
+                seriesPanel.add(cardLabel);
+            }
+            completePanel.add(seriesPanel);
         }
+        completePanel.repaint();
     }
     
     public void updateHandPanel() {
         handPanel.removeAll();
         for (Card card : player.getHand()) {
             CardLabel cardLabel = new CardLabel(card);
-            if (player.getType() == Player.Type.HUMAN) {
+            if (player.isHuman()) {
                 cardLabel.setRevealed(true);
             }
             handPanel.add(cardLabel);
@@ -90,6 +99,10 @@ public class PlayerPanel extends javax.swing.JPanel {
     
     public void playerOut() {
         setEnabled(false);
+    }
+    
+    public void showCompletedSeries(boolean flag) {
+        showCompletedSeries = flag;
     }
 
     /**

@@ -126,6 +126,10 @@ abstract public class Player implements Cloneable {
         return null;
     }
     
+    public boolean isHuman() {
+        return (type == Type.HUMAN);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 3;

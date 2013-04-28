@@ -83,9 +83,8 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
                 gameThread.join();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
-            } finally {
-                gameThread = null;
             }
+            gameThread = null;
         }
         gameBoard.clear();
         setMessage("Ready");
@@ -103,8 +102,10 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
 
     private void initGameBoard() {
         gameBoard.clear();
+        boolean forceShowOfSeries = loadedConfig.getForceShowOfSeries();
         for (Player player : loadedConfig.getPlayers()) {
-            gameBoard.addPlayer(player);
+            PlayerPanel panel = gameBoard.addPlayer(player);
+            panel.showCompletedSeries(forceShowOfSeries || player.isHuman());
         }
         gameBoard.revalidate();
     }

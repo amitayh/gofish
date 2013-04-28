@@ -63,7 +63,6 @@ public class ManualCard extends ConfigCard {
         
         constraints.gridy++;
         forceShowOfSeries = new JCheckBox("Force show completed series");
-        forceShowOfSeries.setSelected(true);
         center.add(forceShowOfSeries, constraints);
     }
 
