@@ -6,15 +6,17 @@ import javax.swing.JLabel;
 
 public class CardLabel extends JLabel {
     
-    final private static int CARD_WIDTH = 75;
+    final public static int CARD_WIDTH = 75;
     
-    final private static int CARD_HEIGHT = 105;
+    final public static int CARD_HEIGHT = 105;
     
     final private static String IMAGES_PATH = "cards/";
     
     final private static String IMAGE_EXTENSION = ".png";
     
     final private static Icon BACK = getIcon("back");
+    
+    final private static Icon EMPTY = getIcon("empty");
     
     private Card card;
     
@@ -24,6 +26,8 @@ public class CardLabel extends JLabel {
 
     public CardLabel(Card card) {
         this.card = card;
+        setVerticalTextPosition(JLabel.CENTER);
+        setHorizontalTextPosition(JLabel.CENTER);
         icon = getIcon(card.getName());
         init();
     }
@@ -33,6 +37,7 @@ public class CardLabel extends JLabel {
             if (icon != null) {
                 setIcon(icon);
             } else {
+                setIcon(EMPTY);
                 setText(card.getName());
             }
         } else {

@@ -106,6 +106,7 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
         for (Player player : loadedConfig.getPlayers()) {
             PlayerPanel panel = gameBoard.addPlayer(player);
             panel.showCompletedSeries(forceShowOfSeries || player.isHuman());
+            panel.updatePanels();
         }
         gameBoard.revalidate();
     }

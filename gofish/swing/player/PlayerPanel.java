@@ -11,7 +11,7 @@ import gofish.model.Series;
 import gofish.swing.CardLabel;
 import gofish.swing.SwingUtils;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.util.concurrent.TimeUnit;
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.styles.BalloonTipStyle;
 import net.java.balloontip.styles.RoundedBalloonStyle;
@@ -23,6 +23,8 @@ import net.java.balloontip.styles.RoundedBalloonStyle;
 public class PlayerPanel extends javax.swing.JPanel {
     
     final private static Color PLAYING_BACKGROUND = new Color(0xFFFEDF);
+    
+    final private static long BALLOON_TIME = TimeUnit.SECONDS.toMillis(2);
     
     final private static BalloonTipStyle BALLOON_STYLE =
         new RoundedBalloonStyle(5 ,5, Color.WHITE, Color.BLACK);
@@ -40,7 +42,6 @@ public class PlayerPanel extends javax.swing.JPanel {
         this.player = player;
         String name = SwingUtils.bold(player.getName());
         nameLabel.setText(name);
-        updatePanels();
     }
     
     public void isPlaying() {
@@ -54,7 +55,7 @@ public class PlayerPanel extends javax.swing.JPanel {
     public void say(String message) {
         BalloonTip tip = new BalloonTip(nameLabel, message, BALLOON_STYLE, false);
         try {
-            Thread.sleep(2000);
+            Thread.sleep(BALLOON_TIME);
         } catch (InterruptedException e) {
             throw new GameStoppedException(e);
         } finally {
@@ -74,13 +75,7 @@ public class PlayerPanel extends javax.swing.JPanel {
     public void updateCompletePanel() {
         completePanel.removeAll();
         for (Series series : player.getCompleteSeries()) {
-            CardsPanel seriesPanel = new CardsPanel();
-            seriesPanel.setPreferredSize(new Dimension(150, 150));
-            for (Card card : series.getCards()) {
-                CardLabel cardLabel = new CardLabel(card);
-                cardLabel.setRevealed(showCompletedSeries);
-                seriesPanel.add(cardLabel);
-            }
+            SeriesPanel seriesPanel = new SeriesPanel(series, showCompletedSeries);
             completePanel.add(seriesPanel);
         }
         completePanel.repaint();
@@ -116,6 +111,7 @@ public class PlayerPanel extends javax.swing.JPanel {
 
         topPanel = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
+        completeScrollPane = new javax.swing.JScrollPane();
         completePanel = new javax.swing.JPanel();
         handPanel = new gofish.swing.player.CardsPanel();
 
@@ -132,17 +128,23 @@ public class PlayerPanel extends javax.swing.JPanel {
         nameLabel.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         topPanel.add(nameLabel, java.awt.BorderLayout.LINE_START);
 
+        completeScrollPane.setBorder(null);
+        completeScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        completeScrollPane.setOpaque(false);
+        completeScrollPane.setPreferredSize(new java.awt.Dimension(10, 120));
+
         completePanel.setOpaque(false);
-        completePanel.setPreferredSize(new java.awt.Dimension(100, 70));
-        completePanel.setRequestFocusEnabled(false);
         completePanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-        topPanel.add(completePanel, java.awt.BorderLayout.CENTER);
+        completeScrollPane.setViewportView(completePanel);
+
+        topPanel.add(completeScrollPane, java.awt.BorderLayout.CENTER);
 
         add(topPanel, java.awt.BorderLayout.NORTH);
         add(handPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel completePanel;
+    private javax.swing.JScrollPane completeScrollPane;
     private gofish.swing.player.CardsPanel handPanel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JPanel topPanel;
