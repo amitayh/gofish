@@ -11,6 +11,7 @@ public class AboutDialog extends JDialog {
     
     public AboutDialog(JFrame parent) {
         super(parent, "GoFish - About", true);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());

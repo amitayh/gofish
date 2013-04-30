@@ -20,6 +20,7 @@ public class ConfigDialog extends JDialog {
 
     public ConfigDialog(SwingGame game) {
         super(game, "GoFish - Game Configuration", true);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
         Container contentPane = getContentPane();
         contentPane.setLayout(new CardLayout());
