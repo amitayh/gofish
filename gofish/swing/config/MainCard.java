@@ -1,23 +1,28 @@
 package gofish.swing.config;
 
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import net.miginfocom.swing.MigLayout;
 
 public class MainCard extends JPanel {
     
     private ConfigDialog dialog;
     
     public MainCard(ConfigDialog dialog) {
-        super(new GridBagLayout());
         this.dialog = dialog;
-        addButton(ConfigDialog.MANUAL, "Manual Configuration");
-        addButton(ConfigDialog.XML, "XML Configuration");
+        
+        setLayout(new MigLayout("", "[grow][][][grow]", "[grow][][grow]"));
+        
+        JButton manualButton = createButton(ConfigDialog.MANUAL, "Manual Configuration");
+        add(manualButton, "cell 1 1");
+        
+        JButton xmlButton = createButton(ConfigDialog.XML, "XML Configuration");
+        add(xmlButton, "cell 2 1");
     }
     
-    private void addButton(final String card, String text) {
+    private JButton createButton(final String card, String text) {
         JButton button = new JButton(text);
         button.addActionListener(new ActionListener() {
             @Override
@@ -25,7 +30,7 @@ public class MainCard extends JPanel {
                 dialog.showCard(card);
             }
         });
-        add(button);
+        return button;
     }
 
 }

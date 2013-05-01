@@ -154,27 +154,28 @@ public class PlayerPanel extends JPanel {
         completedSereisCount = new JLabel("0");
         add(completedSereisCount, "cell 2 2");
 
-        JScrollPane handScrollPane = new JScrollPane();
-        handScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        add(handScrollPane, "cell 0 3 3 1,grow");
-
-        JLabel handTitle = new JLabel("Cards in hand");
-        handScrollPane.setColumnHeaderView(handTitle);
-
         JPanel handContainer = new JPanel();
         handPanel = new CardsPanel();
         handContainer.add(handPanel);
-        handScrollPane.setViewportView(handContainer);
-
-        JScrollPane completeScrollPane = new JScrollPane();
-        completeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        add(completeScrollPane, "cell 0 4 3 1,grow");
-
-        JLabel completeTitle = new JLabel("Completed series");
-        completeScrollPane.setColumnHeaderView(completeTitle);
+        JScrollPane handScrollPane = createScrollPane("Cards in hand", handContainer);
+        add(handScrollPane, "cell 0 3 3 1,grow");
 
         completePanel = new JPanel();
-        completeScrollPane.setViewportView(completePanel);
+        JScrollPane completeScrollPane = createScrollPane("Completed series", completePanel);
+        add(completeScrollPane, "cell 0 4 3 1,grow");
+    }
+    
+    private JScrollPane createScrollPane(String title, JComponent viewport) {
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        
+        JLabel titleLabel = new JLabel(title);
+        scrollPane.setColumnHeaderView(titleLabel);
+        scrollPane.getColumnHeader().setBackground(Color.WHITE);
+        
+        scrollPane.setViewportView(viewport);
+        
+        return scrollPane;
     }
 
 }

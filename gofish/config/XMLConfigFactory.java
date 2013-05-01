@@ -71,7 +71,7 @@ abstract public class XMLConfigFactory implements ConfigFactory {
             Document doc = db.parse(file);
             root = doc.getDocumentElement();
         } catch (SAXException e) {
-            throw new ConfigValidationException("Schema validation failed", e);
+            throw new ConfigValidationException("Invalid configuration file", e);
         } catch (IOException e) {
             throw new ConfigValidationException("File does not exist", e);
         }

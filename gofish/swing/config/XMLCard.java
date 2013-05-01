@@ -12,14 +12,14 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import net.miginfocom.swing.MigLayout;
 
 public class XMLCard extends ConfigCard {
-    
-    final private static int COLUMNS = 20;
     
     private JTextField filenameField;
     
@@ -35,23 +35,26 @@ public class XMLCard extends ConfigCard {
     
     @Override
     public void initComponents() {
+        center.setLayout(new MigLayout("", "[][grow][]", "[][]"));
         center.setBorder(new TitledBorder("XML Configuration"));
         
-        filenameField = new JTextField("No file chosen", COLUMNS);
-        filenameField.setEditable(false);
-        center.add(filenameField);
+        JLabel fileLabel = new JLabel("File location:");
+        center.add(fileLabel, "cell 0 0");
         
-        JButton chooseFileButton = new JButton("Choose file");
+        filenameField = new JTextField();
+        filenameField.setEditable(false);
+        center.add(filenameField, "cell 1 0,growx");
+        
+        JButton chooseFileButton = new JButton("Browse...");
         chooseFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 openFileChooser();
             }
         });
-        center.add(chooseFileButton);
+        center.add(chooseFileButton, "cell 2 0");
         
-        // Disable start button by default
-        startButton.setEnabled(false);
+        center.add(errorLabel, "cell 1 1 2 1");
     }
 
     @Override

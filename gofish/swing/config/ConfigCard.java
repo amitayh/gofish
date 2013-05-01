@@ -2,13 +2,13 @@ package gofish.swing.config;
 
 import gofish.config.ConfigFactory;
 import gofish.swing.SwingGame;
+import gofish.swing.SwingUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,41 +16,38 @@ import javax.swing.border.EmptyBorder;
 
 abstract public class ConfigCard extends JPanel implements ConfigFactory {
     
-    protected JPanel center;
-    
-    protected JPanel bottom;
-    
-    protected JButton startButton;
+    final private static Icon ERROR_ICON = SwingUtils.getIcon("exclamation.png");
     
     protected SwingGame game;
     
-    private JLabel errorLabel;
+    protected JPanel center;
+    
+    protected JLabel errorLabel;
+    
+    private JButton startButton;
     
     private ConfigDialog dialog;
     
     public ConfigCard(SwingGame game, ConfigDialog dialog) {
-        super(new BorderLayout());
         this.game = game;
         this.dialog = dialog;
         initUI();        
     }
 
     private void initUI() {
+        setLayout(new BorderLayout());
         setBorder(new EmptyBorder(5, 5, 5, 5));
         
-        center = new JPanel(new GridBagLayout());
+        center = new JPanel();
         add(center, BorderLayout.CENTER);
         
-        bottom = new JPanel(new BorderLayout());
-        add(bottom, BorderLayout.PAGE_END);
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        add(buttonsPanel, BorderLayout.PAGE_END);
         
-        errorLabel = new JLabel();
-        errorLabel.setForeground(Color.RED);
-        bottom.add(errorLabel, BorderLayout.PAGE_START);
-        
-        LayoutManager layout = new FlowLayout(FlowLayout.RIGHT);
-        JPanel buttonsBar = new JPanel(layout);
-        bottom.add(buttonsBar, BorderLayout.CENTER);
+        JPanel buttonsBar = new JPanel();
+        buttonsBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.add(buttonsBar, BorderLayout.CENTER);
         
         JButton backButton = new JButton("Back");
         backButton.addActionListener(new ActionListener() {
@@ -61,11 +58,16 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
         });
         buttonsBar.add(backButton);
         
+        errorLabel = new JLabel(ERROR_ICON);
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setVisible(false);
+        
         startButton = new JButton("Start game");
+        startButton.setEnabled(false);
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dialog.setVisible(false);
+                dialog.dispose();
                 game.start(getConfig());
             }
         });
@@ -74,13 +76,14 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
         initComponents();
     }
     
-    protected void setError(String text) {
-        errorLabel.setText(text);
+    protected void setError(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
         startButton.setEnabled(false);
     }
     
     protected void clearError() {
-        errorLabel.setText("");
+        errorLabel.setVisible(false);
         startButton.setEnabled(true);
     }
     

@@ -1,17 +1,21 @@
 package gofish.swing.config.manual;
 
 import gofish.model.Player.Type;
+import gofish.swing.SwingUtils;
+import gofish.swing.config.ManualCard;
 import gofish.swing.player.AbstractPlayer;
 import gofish.swing.player.Computer;
 import gofish.swing.player.Human;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JCheckBox;
+import javax.swing.Icon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import net.miginfocom.swing.MigLayout;
 
 public class PlayerSettingsPanel extends JPanel {
     
@@ -19,22 +23,25 @@ public class PlayerSettingsPanel extends JPanel {
     
     final private static Type[] TYPES = {Type.HUMAN, Type.COMPUTER};
     
-    final private static int COLUMNS = 20;
+    final private static Icon REMOVE_ICON = SwingUtils.getIcon("delete.png");
     
-    private JCheckBox state;
+    private ManualCard parent;
     
     private JComboBox type;
     
     private JTextField name;
     
-    public PlayerSettingsPanel(Type type, String name) {
-        init();
+    private JButton removeButton;
+    
+    public PlayerSettingsPanel(ManualCard parent, Type type, String name) {
+        this.parent = parent;
+        initComponents();
         this.type.setSelectedItem(type);
         this.name.setText(name);
     }
     
-    public void lock() {
-        state.setEnabled(false);
+    public String getPlayerName() {
+        return name.getText();
     }
     
     public AbstractPlayer createPlayer() {
@@ -47,26 +54,14 @@ public class PlayerSettingsPanel extends JPanel {
         }
         return player;
     }
-    
-    public String getName() {
-        return name.getText();
-    }
 
-    private void init() {
-        state = new JCheckBox();
-        state.setSelected(true);
-        state.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setEnabled(state.isSelected());
-            }
-        });
-        add(state);
+    private void initComponents() {
+        setLayout(new MigLayout("", "0[][grow][]0", "0[]"));
         
         type = new JComboBox(TYPES);
-        add(type);
+        add(type, "cell 0 0,growx");
         
-        name = new JTextField(COLUMNS);
+        name = new JTextField();
         name.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -81,19 +76,28 @@ public class PlayerSettingsPanel extends JPanel {
                 fireNameChangeEvent();
             }
         });
-        add(name);
+        add(name, "flowx,cell 1 0,growx");
+        
+        removeButton = new JButton("Remove", REMOVE_ICON);
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removePlayer();
+            }
+        });
+        add(removeButton, "cell 2 0");
+    }
+    
+    private void removePlayer() {
+        parent.removePlayer(this);
     }
     
     private void fireNameChangeEvent() {
         firePropertyChange(NAME_CHANGE_EVENT, false, true);
     }
-    
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        state.setSelected(enabled);
-        type.setEnabled(enabled);
-        name.setEnabled(enabled);
+
+    public void disableRemove() {
+        removeButton.setEnabled(false);
     }
 
 }
