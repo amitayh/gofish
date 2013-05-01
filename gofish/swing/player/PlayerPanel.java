@@ -8,10 +8,10 @@ import gofish.model.Series;
 import gofish.swing.CardLabel;
 import gofish.swing.SwingUtils;
 import java.awt.Color;
-import java.awt.Container;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import javax.swing.Icon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,13 +38,19 @@ public class PlayerPanel extends JPanel {
     
     private JLabel imageLabel;
     
+    private JLabel nameLabel;
+    
+    private JLabel remainingCardsLabel;
+    
     private JLabel remainingCardsCount;
+    
+    private JLabel completedSeriesLabel;
     
     private JLabel completedSereisCount;
     
-    private Container handPanel;
+    private CardsPanel handPanel;
     
-    private Container completePanel;
+    private JPanel completePanel;
     
     public PlayerPanel(Player player) {
         this.player = player;
@@ -109,7 +115,17 @@ public class PlayerPanel extends JPanel {
     }
     
     public void playerOut() {
-        setEnabled(false);
+        JComponent[] components = {
+            imageLabel,
+            nameLabel,
+            remainingCardsLabel,
+            remainingCardsCount,
+            completedSeriesLabel,
+            completedSereisCount
+        };
+        for (JComponent component : components) {
+            component.setEnabled(false);
+        }
     }
     
     public void showCompletedSeries(boolean flag) {
@@ -117,22 +133,22 @@ public class PlayerPanel extends JPanel {
     }
 
     private void initComponents() {
-        setLayout(new MigLayout("", "[48px][][grow]", "[][][][150px][150px]"));
+        setLayout(new MigLayout("", "[48px][][grow]", "[][][][160px][160px]"));
 
         imageLabel = new JLabel(USER_ICON);
         add(imageLabel, "cell 0 0 1 3");
         
         String name = SwingUtils.bold(player.getName());
-        JLabel nameLabel = new JLabel(name);
+        nameLabel = new JLabel(name);
         add(nameLabel, "cell 1 0 2 1");
 
-        JLabel remainingCardsLabel = new JLabel("Remaining cards:");
+        remainingCardsLabel = new JLabel("Remaining cards:");
         add(remainingCardsLabel, "cell 1 1");
 
         remainingCardsCount = new JLabel("0");
         add(remainingCardsCount, "cell 2 1");
 
-        JLabel completedSeriesLabel = new JLabel("Completed series:");
+        completedSeriesLabel = new JLabel("Completed series:");
         add(completedSeriesLabel, "cell 1 2");
 
         completedSereisCount = new JLabel("0");
@@ -145,8 +161,10 @@ public class PlayerPanel extends JPanel {
         JLabel handTitle = new JLabel("Cards in hand");
         handScrollPane.setColumnHeaderView(handTitle);
 
+        JPanel handContainer = new JPanel();
         handPanel = new CardsPanel();
-        handScrollPane.setViewportView(handPanel);
+        handContainer.add(handPanel);
+        handScrollPane.setViewportView(handContainer);
 
         JScrollPane completeScrollPane = new JScrollPane();
         completeScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);

@@ -11,8 +11,10 @@ import gofish.swing.player.PlayerPanel;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.border.EtchedBorder;
 
 public class SwingGame extends JFrame implements GUIRenderer, Runnable {
 
@@ -22,7 +24,7 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     
     private GameBoardPanel gameBoard;
     
-    private StatusBarPanel statusBar;
+    private JLabel statusBar;
     
     private Config loadedConfig;
     
@@ -45,7 +47,8 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
         gameBoard = new GameBoardPanel();
         contentPane.add(gameBoard, BorderLayout.CENTER);
         
-        statusBar = new StatusBarPanel("Ready");
+        statusBar = new JLabel("Ready");
+        statusBar.setBorder(new EtchedBorder());
         contentPane.add(statusBar, BorderLayout.PAGE_END);
         
         // Window size / position

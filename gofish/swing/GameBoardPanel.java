@@ -17,7 +17,7 @@ public class GameBoardPanel extends JPanel {
     
     final private static int NUM_COLS = 3;
     
-    final private static int GAP = 10;
+    final private static int GAP = 5;
     
     private Map<Player, PlayerPanel> playerPanels = new HashMap<>();
     
@@ -61,7 +61,7 @@ public class GameBoardPanel extends JPanel {
     synchronized public PlayerPanel getLastClicked() {
         if (lastClicked == null) {
             try {
-                this.wait();
+                wait();
             } catch (InterruptedException e) {
                 throw new GameStoppedException(e);
             }
@@ -73,7 +73,7 @@ public class GameBoardPanel extends JPanel {
     
     synchronized private void setLastClicked(PlayerPanel player) {
         lastClicked = player;
-        this.notify();
+        notify();
     }
 
     private class LastClickedListener extends MouseAdapter {
