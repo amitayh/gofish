@@ -1,11 +1,10 @@
 package gofish.swing;
 
 import java.awt.Container;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import net.miginfocom.swing.MigLayout;
 
 public class AboutDialog extends JDialog {
     
@@ -14,21 +13,17 @@ public class AboutDialog extends JDialog {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
         Container contentPane = getContentPane();
-        contentPane.setLayout(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
+        contentPane.setLayout(new MigLayout("", "[grow]", "[grow][][][][grow]"));
         JLabel label;
         
-        constraints.gridy = 0;
         label = new JLabel(SwingUtils.bold("GoFish v2.0 - Swing UI"));
-        contentPane.add(label, constraints);
+        contentPane.add(label, "cell 0 1,alignx center");
         
-        constraints.gridy = 1;
         label = new JLabel("Created by Amitay Horwitz");
-        contentPane.add(label, constraints);
+        contentPane.add(label, "cell 0 2,alignx center");
         
-        constraints.gridy = 2;
         label = new JLabel("Internet & Java - Spring 2013");
-        contentPane.add(label, constraints);
+        contentPane.add(label, "cell 0 3,alignx center");
         
         setSize(250, 120);
         setResizable(false);
