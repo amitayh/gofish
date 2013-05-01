@@ -6,7 +6,7 @@ import javax.swing.JLayeredPane;
 
 public class CardsPanel extends JLayeredPane {
     
-    final public static int SPACING = 20;
+    final public static int SPACING = 18;
     
     public void add(CardLabel card) {
         int numItems = getComponentCount();

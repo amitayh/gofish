@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 
 public class CardLabel extends JLabel {
     
-    final public static int CARD_WIDTH = 75;
+    final public static int CARD_WIDTH = 78;
     
     final public static int CARD_HEIGHT = 105;
     
