@@ -16,7 +16,8 @@ public class AboutDialog extends JDialog {
         contentPane.setLayout(new MigLayout("", "[grow]", "[grow][][][][grow]"));
         JLabel label;
         
-        label = new JLabel(SwingUtils.bold("GoFish v2.0 - Swing UI"));
+        label = new JLabel("GoFish v2.0 - Swing UI");
+        SwingUtils.makeBold(label);
         contentPane.add(label, "cell 0 1,alignx center");
         
         label = new JLabel("Created by Amitay Horwitz");

@@ -2,8 +2,8 @@ package gofish.swing.config;
 
 import gofish.config.ConfigFactory;
 import gofish.swing.SwingGame;
-import gofish.swing.SwingUtils;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
@@ -45,6 +45,7 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
         add(bottom, BorderLayout.PAGE_END);
         
         errorLabel = new JLabel();
+        errorLabel.setForeground(Color.RED);
         bottom.add(errorLabel, BorderLayout.PAGE_START);
         
         LayoutManager layout = new FlowLayout(FlowLayout.RIGHT);
@@ -74,7 +75,7 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
     }
     
     protected void setError(String text) {
-        errorLabel.setText(SwingUtils.error(text));
+        errorLabel.setText(text);
         startButton.setEnabled(false);
     }
     

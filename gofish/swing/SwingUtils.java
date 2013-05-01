@@ -1,8 +1,10 @@
 package gofish.swing;
 
+import java.awt.Font;
 import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.UIManager;
 
 public class SwingUtils {
@@ -17,12 +19,9 @@ public class SwingUtils {
         }
     }
     
-    public static String bold(String text) {
-        return "<html><b>" + text + "</b></html>";
-    }
-    
-    public static String error(String text) {
-        return "<html><b color='red'>" + text + "</b></html>";
+    public static void makeBold(JLabel label) {
+        Font font = label.getFont();
+        label.setFont(font.deriveFont(Font.BOLD));
     }
     
     public static Icon getIcon(String name) {

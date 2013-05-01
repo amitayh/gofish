@@ -9,6 +9,7 @@ import gofish.model.Player;
 import gofish.model.Series;
 import gofish.swing.player.PlayerPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -61,11 +62,13 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     }
     
     public void setMessage(String text) {
+        statusBar.setForeground(null);
         statusBar.setText(text);
     }
     
     public void setErrorMessage(String text) {
-        setMessage(SwingUtils.error(text));
+        statusBar.setForeground(Color.RED);
+        statusBar.setText(text);
     }
     
     public void start(Config config) {

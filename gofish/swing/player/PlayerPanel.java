@@ -138,8 +138,8 @@ public class PlayerPanel extends JPanel {
         imageLabel = new JLabel(USER_ICON);
         add(imageLabel, "cell 0 0 1 3");
         
-        String name = SwingUtils.bold(player.getName());
-        nameLabel = new JLabel(name);
+        nameLabel = new JLabel(player.getName());
+        SwingUtils.makeBold(nameLabel);
         add(nameLabel, "cell 1 0 2 1");
 
         remainingCardsLabel = new JLabel("Remaining cards:");
