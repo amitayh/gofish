@@ -19,9 +19,11 @@ import javax.swing.border.EtchedBorder;
 
 public class SwingGame extends JFrame implements GUIRenderer, Runnable {
 
-    final private static int DEFAULT_WIDTH = 1024;
+    final private static int DEFAULT_WIDTH = 1200;
     
-    final private static int DEFAULT_HEIGHT = 768;
+    final private static int DEFAULT_HEIGHT = 800;
+    
+    final private static String READY_TEXT = "Ready";
     
     private GameBoardPanel gameBoard;
     
@@ -48,7 +50,7 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
         gameBoard = new GameBoardPanel();
         contentPane.add(gameBoard, BorderLayout.CENTER);
         
-        statusBar = new JLabel("Ready");
+        statusBar = new JLabel(READY_TEXT);
         statusBar.setBorder(new EtchedBorder());
         contentPane.add(statusBar, BorderLayout.PAGE_END);
         
@@ -93,7 +95,7 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
             gameThread = null;
         }
         gameBoard.clear();
-        setMessage("Ready");
+        setMessage(READY_TEXT);
     }
     
     public void restart() {
@@ -104,23 +106,6 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     public void run() {
         Game game = new Game(this, loadedConfig);
         game.start();
-    }
-
-    private void initGameBoard() {
-        gameBoard.clear();
-        boolean forceShowOfSeries = loadedConfig.getForceShowOfSeries();
-        for (Player player : loadedConfig.getPlayers()) {
-            PlayerPanel panel = gameBoard.addPlayer(player);
-            panel.showCompletedSeries(forceShowOfSeries || player.isHuman());
-            panel.updatePanels();
-        }
-        gameBoard.revalidate();
-    }
-    
-    private void showInfoDialog(String message) {
-        String title = "GoFish";
-        int type = JOptionPane.INFORMATION_MESSAGE;
-        JOptionPane.showMessageDialog(this, message, title, type);
     }
 
     @Override
@@ -137,11 +122,11 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     @Override
     public void playerTurn(Player player) {
         gameBoard.setCurrentPlayer(player);
-        setMessage(player.getName() + " is playing");
     }
 
     @Override
     public void showSeries(Player player) {
+        // Not needed with Swing UI
     }
 
     @Override
@@ -166,7 +151,6 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
 
     @Override
     public void playerOut(Player player) {
-        setMessage(player.getName() + " is out of the game!");
         PlayerPanel panel = gameBoard.getPlayerPanel(player);
         panel.playerOut();
     }
@@ -177,15 +161,14 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
         PlayerPanel fromPanel = gameBoard.getPlayerPanel(from);
         PlayerPanel toPanel = gameBoard.getPlayerPanel(to);
         fromPanel.say("Yes I do, here you go!");
-        fromPanel.updateHandPanel();
-        toPanel.updateHandPanel();
+        fromPanel.updateHand();
+        toPanel.updateHand();
     }
 
     @Override
     public void seriesCompleted(Player player, Series series) {
-        setMessage(player.getName() + " completed a series");
         PlayerPanel panel = gameBoard.getPlayerPanel(player);
-        panel.updateCompletePanel();
+        panel.updateComplete();
     }
 
     @Override
@@ -198,6 +181,22 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     @Override
     public void error(String message) {
         setErrorMessage(message);
+    }
+    
+    private void initGameBoard() {
+        gameBoard.clear();
+        boolean forceShowOfSeries = loadedConfig.getForceShowOfSeries();
+        for (Player player : loadedConfig.getPlayers()) {
+            PlayerPanel panel = gameBoard.addPlayer(player);
+            panel.showCompletedSeries(forceShowOfSeries || player.isHuman());
+            panel.updatePanels();
+        }
+    }
+    
+    private void showInfoDialog(String message) {
+        String title = "GoFish";
+        int type = JOptionPane.INFORMATION_MESSAGE;
+        JOptionPane.showMessageDialog(this, message, title, type);
     }
 
 }

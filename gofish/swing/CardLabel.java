@@ -21,39 +21,32 @@ public class CardLabel extends JLabel {
     private Card card;
     
     private Icon icon;
-    
-    private boolean revealed = false;
 
-    public CardLabel(Card card) {
+    public CardLabel(Card card, boolean revealed) {
         this.card = card;
         setVerticalTextPosition(JLabel.CENTER);
         setHorizontalTextPosition(JLabel.CENTER);
+        setSize(CARD_WIDTH, CARD_HEIGHT);
         icon = getIcon(card.getName());
-        init();
+        setRevealed(revealed);
     }
     
-    public void setRevealed(boolean flag) {
+    final public void setRevealed(boolean flag) {
         if (flag) {
+            // Reveal card
             if (icon != null) {
+                // Card icon available - display it
                 setIcon(icon);
             } else {
+                // No icon available - display card's name
                 setIcon(EMPTY);
                 setText(card.getName());
             }
         } else {
+            // Conceal card
             setIcon(BACK);
             setText("");
         }
-        revealed = flag;
-    }
-    
-    public boolean getRevealed() {
-        return revealed;
-    }
-    
-    private void init() {
-        setSize(CARD_WIDTH, CARD_HEIGHT);
-        setRevealed(false);
     }
     
     private static Icon getIcon(String name) {

@@ -3,7 +3,6 @@ package gofish.swing.actions;
 import gofish.swing.config.ConfigDialog;
 import gofish.swing.SwingGame;
 import java.awt.event.ActionEvent;
-import javax.swing.SwingUtilities;
 
 public class NewGameAction extends AbstractAction {
     
@@ -15,13 +14,7 @@ public class NewGameAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Instantiate dialog only when needed
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                getConfigDialog().setVisible(true);
-            }
-        });
+        getConfigDialog().setVisible(true);
     }
     
     private ConfigDialog getConfigDialog() {

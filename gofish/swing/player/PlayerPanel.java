@@ -1,11 +1,9 @@
 package gofish.swing.player;
 
 import gofish.exception.GameStoppedException;
-import gofish.model.Card;
 import gofish.model.CardsCollection;
 import gofish.model.Player;
 import gofish.model.Series;
-import gofish.swing.CardLabel;
 import gofish.swing.SwingUtils;
 import java.awt.Color;
 import java.util.Collection;
@@ -81,37 +79,29 @@ public class PlayerPanel extends JPanel {
     }
     
     public final void updatePanels() {
-        updateCompletePanel();
-        updateHandPanel();
+        updateHand();
+        updateComplete();
     }
     
-    public void updateCompletePanel() {
-        completePanel.removeAll();
+    public void updateHand() {
+        CardsCollection hand = player.getHand();
+        handPanel.setCards(hand, player.isHuman());
+        updateInfoBox(remainingCardsCount, hand.size());
+    }
+    
+    public void updateComplete() {
         Collection<Series> completeSeries = player.getCompleteSeries();
+        
+        // Update complete panel
+        completePanel.removeAll();
         for (Series series : completeSeries) {
-            SeriesPanel seriesPanel = new SeriesPanel(series, showCompletedSeries);
+            CardsPanel seriesPanel = new CardsPanel();
+            seriesPanel.setCards(series.getCards(), showCompletedSeries);
             completePanel.add(seriesPanel);
         }
         completePanel.repaint();
         
-        Integer series = new Integer(completeSeries.size());
-        completedSereisCount.setText(series.toString());
-    }
-    
-    public void updateHandPanel() {
-        handPanel.removeAll();
-        CardsCollection hand = player.getHand();
-        for (Card card : hand) {
-            CardLabel cardLabel = new CardLabel(card);
-            if (player.isHuman()) {
-                cardLabel.setRevealed(true);
-            }
-            handPanel.add(cardLabel);
-        }
-        handPanel.repaint();
-        
-        Integer remainingCards = new Integer(hand.size());
-        remainingCardsCount.setText(remainingCards.toString());
+        updateInfoBox(completedSereisCount, completeSeries.size());
     }
     
     public void playerOut() {
@@ -130,6 +120,10 @@ public class PlayerPanel extends JPanel {
     
     public void showCompletedSeries(boolean flag) {
         showCompletedSeries = flag;
+    }
+    
+    private void updateInfoBox(JLabel label, int num) {
+        label.setText(new Integer(num).toString());
     }
 
     private void initComponents() {
