@@ -1,9 +1,6 @@
 package gofish.swing;
 
-import gofish.swing.actions.NewGameAction;
 import gofish.swing.actions.AboutAction;
-import gofish.swing.actions.RestartGameAction;
-import gofish.swing.actions.StopGameAction;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Action;
@@ -28,14 +25,9 @@ public class Menu extends JMenuBar {
     private JMenu buildFileMenu() {
         JMenu menu = new JMenu("File");
         
-        Action newGame = new NewGameAction(game);
-        menu.add(newGame);
-        
-        Action stopGame = new StopGameAction(game);
-        menu.add(stopGame);
-        
-        Action restartGame = new RestartGameAction(game);
-        menu.add(restartGame);
+        menu.add(game.getNewGameAction());
+        menu.add(game.getStopGameAction());
+        menu.add(game.getRestartGameAction());
         
         menu.addSeparator();
         

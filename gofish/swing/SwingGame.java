@@ -7,14 +7,19 @@ import gofish.Game;
 import gofish.model.Card;
 import gofish.model.Player;
 import gofish.model.Series;
+import gofish.swing.actions.NewGameAction;
+import gofish.swing.actions.RestartGameAction;
+import gofish.swing.actions.StopGameAction;
 import gofish.swing.player.PlayerPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.JToolBar;
 import javax.swing.border.EtchedBorder;
 
 public class SwingGame extends JFrame implements GUIRenderer, Runnable {
@@ -34,6 +39,12 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     private Config previousConfig;
     
     private Thread gameThread;
+    
+    private Action newGameAction = new NewGameAction(this);
+    
+    private Action restartGameAction = new RestartGameAction(this);
+    
+    private Action stopGameAction = new StopGameAction(this);
 
     public SwingGame() {
         setTitle("GoFish");
@@ -46,6 +57,9 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
         // Prepare content pane
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
+        
+        JToolBar toolBar = new ToolBar(this);
+        contentPane.add(toolBar, BorderLayout.PAGE_START);
         
         gameBoard = new GameBoardPanel();
         contentPane.add(gameBoard, BorderLayout.CENTER);
@@ -100,6 +114,18 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     
     public void restart() {
         start(previousConfig);
+    }
+    
+    public Action getNewGameAction() {
+        return newGameAction;
+    }
+
+    public Action getRestartGameAction() {
+        return restartGameAction;
+    }
+
+    public Action getStopGameAction() {
+        return stopGameAction;
     }
     
     @Override

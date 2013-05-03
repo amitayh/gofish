@@ -19,6 +19,7 @@ public class CardsPanel extends JLayeredPane {
             index++;
         }
         updatePreferredSize(index);
+        revalidate();
     }
     
     private void addCard(CardLabel cardLabel, int index) {

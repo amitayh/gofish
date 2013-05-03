@@ -2,7 +2,6 @@ package gofish;
 
 import gofish.swing.SwingGame;
 import gofish.swing.SwingUtils;
-import gofish.swing.actions.NewGameAction;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
@@ -17,8 +16,8 @@ public class SwingMain {
                 SwingGame game = new SwingGame();
                 game.setVisible(true);
                 // Open config dialog
-                Action action = new NewGameAction(game);
-                action.actionPerformed(null);
+                Action newGame = game.getNewGameAction();
+                newGame.actionPerformed(null);
             }
         });
     }

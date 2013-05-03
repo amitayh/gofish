@@ -9,12 +9,12 @@ import gofish.swing.SwingGame;
 import gofish.swing.SwingUtils;
 import gofish.swing.config.manual.PlayerSettingsPanel;
 import gofish.swing.player.AbstractPlayer;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import javax.swing.BoxLayout;
@@ -36,8 +36,6 @@ public class ManualCard extends ConfigCard {
     private JCheckBox forceShowOfSeries;
     
     private PropertyChangeListener listener;
-    
-    private List<PlayerSettingsPanel> playersSettings;
     
     public ManualCard(SwingGame game, ConfigDialog dialog) {
         super(game, dialog);
@@ -77,7 +75,6 @@ public class ManualCard extends ConfigCard {
                 validatePlayerNames();
             }
         };
-        playersSettings = new LinkedList<>();
         addDefaultPlayers();
     }
     
@@ -91,7 +88,6 @@ public class ManualCard extends ConfigCard {
         player.addPropertyChangeListener(PlayerSettingsPanel.NAME_CHANGE_EVENT, listener);
         
         // Add to players panel
-        playersSettings.add(player);
         playersPanel.add(player);
         playersPanel.revalidate();
         
@@ -103,7 +99,6 @@ public class ManualCard extends ConfigCard {
     
     public void removePlayer(PlayerSettingsPanel player) {
         // Remove from players panel
-        playersSettings.remove(player);
         playersPanel.remove(player);
         playersPanel.revalidate();
         
@@ -115,10 +110,13 @@ public class ManualCard extends ConfigCard {
     public Config getConfig() {
         Config config = new Config();
         
-        for (PlayerSettingsPanel playerSettings : playersSettings) {
-            AbstractPlayer player = playerSettings.createPlayer();
-            player.setGame(game);
-            config.addPlayer(player);
+        for (Component component : playersPanel.getComponents()) {
+            if (component instanceof PlayerSettingsPanel) {
+                PlayerSettingsPanel playerSettings = (PlayerSettingsPanel) component;
+                AbstractPlayer player = playerSettings.createPlayer();
+                player.setGame(game);
+                config.addPlayer(player);
+            }
         }
         dealCards(config.getPlayers());
         config.setAllowMutipleRequests(allowMultipleRequests.isSelected());
@@ -150,7 +148,7 @@ public class ManualCard extends ConfigCard {
     }
 
     private void checkNumberOfPlayers() {
-        boolean canAdd = playersSettings.size() < Game.MAX_NUM_PLAYERS;
+        boolean canAdd = playersPanel.getComponentCount() < Game.MAX_NUM_PLAYERS;
         addButton.setEnabled(canAdd);
     }
     
@@ -158,13 +156,16 @@ public class ManualCard extends ConfigCard {
         boolean isValid = true;
 
         Set<String> names = new HashSet<>();
-        for (PlayerSettingsPanel playerSettings : playersSettings) {
-            String name = playerSettings.getPlayerName();
-            if (name.isEmpty() || names.contains(name)) {
-                isValid = false;
-                break;
-            } else {
-                names.add(name);
+        for (Component component : playersPanel.getComponents()) {
+            if (component instanceof PlayerSettingsPanel) {
+                PlayerSettingsPanel playerSettings = (PlayerSettingsPanel) component;
+                String name = playerSettings.getPlayerName();
+                if (name.isEmpty() || names.contains(name)) {
+                    isValid = false;
+                    break;
+                } else {
+                    names.add(name);
+                }
             }
         }
 
