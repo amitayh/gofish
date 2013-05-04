@@ -130,8 +130,12 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     
     @Override
     public void run() {
-        Game game = new Game(this, loadedConfig);
-        game.start();
+        try {
+            Game game = new Game(this, loadedConfig);
+            game.start();
+        } catch (Exception e) {
+            setErrorMessage(e.getMessage());
+        }
     }
 
     @Override

@@ -19,7 +19,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class PlayerSettingsPanel extends JPanel {
     
-    final public static String NAME_CHANGE_EVENT = "name_change";
+    final public static String NAME_CHANGE_EVENT = "name-change";
     
     final private static Type[] TYPES = {Type.HUMAN, Type.COMPUTER};
     
@@ -27,30 +27,39 @@ public class PlayerSettingsPanel extends JPanel {
     
     private ManualCard parent;
     
-    private JComboBox type;
+    private JComboBox typeComboBox;
     
-    private JTextField name;
+    private JTextField nameTextField;
     
     private JButton removeButton;
+    
+    private String name;
     
     public PlayerSettingsPanel(ManualCard parent, Type type, String name) {
         this.parent = parent;
         initComponents();
-        this.type.setSelectedItem(type);
-        this.name.setText(name);
+        typeComboBox.setSelectedItem(type);
+        nameTextField.setText(name);
+    }
+    
+    public void focusName() {
+        nameTextField.requestFocus();
+    }
+    
+    public void disableRemove() {
+        removeButton.setEnabled(false);
     }
     
     public String getPlayerName() {
-        return name.getText();
+        return name;
     }
     
     public AbstractPlayer createPlayer() {
-        String playerName = name.getText();
         AbstractPlayer player;
-        if (type.getSelectedItem() == Type.HUMAN) {
-            player = new Human(playerName);
+        if (typeComboBox.getSelectedItem() == Type.HUMAN) {
+            player = new Human(name);
         } else {
-            player = new Computer(playerName);
+            player = new Computer(name);
         }
         return player;
     }
@@ -58,11 +67,11 @@ public class PlayerSettingsPanel extends JPanel {
     private void initComponents() {
         setLayout(new MigLayout("", "0[][grow][]0", "0[]"));
         
-        type = new JComboBox(TYPES);
-        add(type, "cell 0 0,growx");
+        typeComboBox = new JComboBox(TYPES);
+        add(typeComboBox, "cell 0 0,growx");
         
-        name = new JTextField();
-        name.getDocument().addDocumentListener(new DocumentListener() {
+        nameTextField = new JTextField();
+        nameTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 fireNameChangeEvent();
@@ -76,7 +85,7 @@ public class PlayerSettingsPanel extends JPanel {
                 fireNameChangeEvent();
             }
         });
-        add(name, "flowx,cell 1 0,growx");
+        add(nameTextField, "flowx,cell 1 0,growx");
         
         removeButton = new JButton("Remove", REMOVE_ICON);
         removeButton.addActionListener(new ActionListener() {
@@ -93,11 +102,9 @@ public class PlayerSettingsPanel extends JPanel {
     }
     
     private void fireNameChangeEvent() {
-        firePropertyChange(NAME_CHANGE_EVENT, false, true);
-    }
-
-    public void disableRemove() {
-        removeButton.setEnabled(false);
+        String oldName = name;
+        name = nameTextField.getText();
+        firePropertyChange(NAME_CHANGE_EVENT, oldName, name);
     }
 
 }

@@ -71,7 +71,7 @@ public class ManualCard extends ConfigCard {
         
         listener = new PropertyChangeListener() {
             @Override
-            public void propertyChange(PropertyChangeEvent evt) {
+            public void propertyChange(PropertyChangeEvent e) {
                 validatePlayerNames();
             }
         };
@@ -79,7 +79,7 @@ public class ManualCard extends ConfigCard {
     }
     
     public PlayerSettingsPanel addPlayer(Type type) {
-        return addPlayer(type, "");
+        return addPlayer(type, "Player");
     }
     
     public PlayerSettingsPanel addPlayer(Type type, String name) {
@@ -90,6 +90,7 @@ public class ManualCard extends ConfigCard {
         // Add to players panel
         playersPanel.add(player);
         playersPanel.revalidate();
+        player.focusName();
         
         checkNumberOfPlayers();
         validatePlayerNames();

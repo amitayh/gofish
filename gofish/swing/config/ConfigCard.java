@@ -42,11 +42,11 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
         add(center, BorderLayout.CENTER);
         
         JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
         add(buttonsPanel, BorderLayout.PAGE_END);
         
         JPanel buttonsBar = new JPanel();
-        buttonsBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsBar.setLayout(new FlowLayout(FlowLayout.TRAILING));
         buttonsPanel.add(buttonsBar, BorderLayout.CENTER);
         
         JButton backButton = new JButton("Back");
