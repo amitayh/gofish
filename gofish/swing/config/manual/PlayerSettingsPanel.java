@@ -1,10 +1,10 @@
 package gofish.swing.config.manual;
 
+import gofish.model.Player;
 import gofish.model.Player.Type;
+import gofish.model.player.Computer;
 import gofish.swing.SwingUtils;
 import gofish.swing.config.ManualCard;
-import gofish.swing.player.AbstractPlayer;
-import gofish.swing.player.Computer;
 import gofish.swing.player.Human;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,10 +54,10 @@ public class PlayerSettingsPanel extends JPanel {
         return name;
     }
     
-    public AbstractPlayer createPlayer() {
-        AbstractPlayer player;
+    public Player createPlayer() {
+        Player player;
         if (typeComboBox.getSelectedItem() == Type.HUMAN) {
-            player = new Human(name);
+            player = new Human(parent.getGame(), name);
         } else {
             player = new Computer(name);
         }

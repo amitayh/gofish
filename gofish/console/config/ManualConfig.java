@@ -4,7 +4,7 @@ import gofish.config.Config;
 import gofish.config.ConfigFactory;
 import gofish.Game;
 import gofish.console.ConsoleUtils;
-import gofish.console.player.Computer;
+import gofish.model.player.Computer;
 import gofish.console.player.Human;
 import gofish.exception.PlayerCollisionException;
 import gofish.model.Card;

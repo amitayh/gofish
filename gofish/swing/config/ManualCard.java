@@ -8,7 +8,6 @@ import gofish.model.Player.Type;
 import gofish.swing.SwingGame;
 import gofish.swing.SwingUtils;
 import gofish.swing.config.manual.PlayerSettingsPanel;
-import gofish.swing.player.AbstractPlayer;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -116,9 +115,7 @@ public class ManualCard extends ConfigCard {
         for (Component component : playersPanel.getComponents()) {
             if (component instanceof PlayerSettingsPanel) {
                 PlayerSettingsPanel playerSettings = (PlayerSettingsPanel) component;
-                AbstractPlayer player = playerSettings.createPlayer();
-                player.setGame(game);
-                config.addPlayer(player);
+                config.addPlayer(playerSettings.createPlayer());
             }
         }
         dealCards(config.getPlayers());

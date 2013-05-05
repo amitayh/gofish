@@ -18,13 +18,13 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
     
     final private static String ERROR_ICON = "exclamation.png";
     
-    protected SwingGame game;
-    
     protected JPanel center;
     
     protected JLabel errorLabel;
     
     private JButton startButton;
+    
+    private SwingGame game;
     
     private ConfigDialog dialog;
     
@@ -32,6 +32,10 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
         this.game = game;
         this.dialog = dialog;
         initUI();        
+    }
+    
+    public SwingGame getGame() {
+        return game;
     }
 
     private void initUI() {

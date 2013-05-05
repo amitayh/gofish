@@ -4,9 +4,9 @@ import gofish.config.Config;
 import gofish.config.XMLConfigFactory;
 import gofish.exception.ConfigValidationException;
 import gofish.model.Player;
+import gofish.model.player.Computer;
 import gofish.swing.SwingGame;
 import gofish.swing.SwingUtils;
-import gofish.swing.player.Computer;
 import gofish.swing.player.Human;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -107,7 +107,7 @@ public class XMLCard extends ConfigCard {
         return factory;
     }
     
-    private static class Factory extends XMLConfigFactory {
+    private class Factory extends XMLConfigFactory {
 
         @Override
         protected Player createPlayer(Player.Type type, String name) {
@@ -117,7 +117,7 @@ public class XMLCard extends ConfigCard {
                     player = new Computer(name);
                     break;
                 case HUMAN:
-                    player = new Human(name);
+                    player = new Human(getGame(), name);
                     break;
                 default:
                     throw new RuntimeException("Unexpected player type");

@@ -123,7 +123,7 @@ public class PlayerPanel extends JPanel {
     }
     
     private void updateInfoBox(JLabel label, int num) {
-        label.setText(new Integer(num).toString());
+        label.setText(Integer.toString(num));
     }
 
     private void initComponents() {

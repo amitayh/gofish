@@ -11,10 +11,13 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
 
-public class Human extends AbstractPlayer {
+public class Human extends Player {
+    
+    private SwingGame game;
 
-    public Human(String name) {
+    public Human(SwingGame game, String name) {
         super(Type.HUMAN, name);
+        this.game = game;
     }
 
     @Override
@@ -30,7 +33,6 @@ public class Human extends AbstractPlayer {
     }
     
     private Player getPlayerAsked() {
-        SwingGame game = getGame();
         game.setMessage("Click on a player you want to ask a card from");
         Player playerAsked = getLastClicked();
         while (playerAsked == this) {
@@ -57,7 +59,6 @@ public class Human extends AbstractPlayer {
     }
     
     private String getCardName(String[] availableCards, Player playerAsked) {
-        SwingGame game = getGame();
         game.setMessage("Choose a card to ask from " + playerAsked.getName());
         return (String) JOptionPane.showInputDialog(
             game,                       // Parent
@@ -71,7 +72,7 @@ public class Human extends AbstractPlayer {
     }
     
     private Player getLastClicked() {
-        return getGame().getGameBoard().getLastClicked().getPlayer();
+        return game.getGameBoard().getLastClicked().getPlayer();
     }
     
 }

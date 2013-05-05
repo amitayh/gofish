@@ -1,4 +1,4 @@
-package gofish.swing.player;
+package gofish.model.player;
 
 import gofish.Game;
 import gofish.exception.NoCardsLeftException;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class Computer extends AbstractPlayer {
+public class Computer extends Player {
     
     private static Random randomGenerator = new Random();
 

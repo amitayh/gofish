@@ -3,7 +3,7 @@ package gofish.console.config;
 import gofish.config.Config;
 import gofish.config.ConfigFactory;
 import gofish.config.XMLConfigFactory;
-import gofish.console.player.Computer;
+import gofish.model.player.Computer;
 import gofish.console.player.Human;
 import gofish.exception.ConfigValidationException;
 import gofish.model.Player;
