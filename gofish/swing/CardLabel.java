@@ -45,7 +45,7 @@ public class CardLabel extends JLabel {
         } else {
             // Conceal card
             setIcon(BACK);
-            setText("");
+            setText(null);
         }
     }
     

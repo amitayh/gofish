@@ -27,6 +27,8 @@ import net.miginfocom.swing.MigLayout;
 
 public class ManualCard extends ConfigCard {
     
+    final private static String ADD_ICON = "add.png";
+    
     private JPanel playersPanel;
     
     private JButton addButton;
@@ -50,7 +52,7 @@ public class ManualCard extends ConfigCard {
         playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.Y_AXIS));
         center.add(playersPanel, "cell 0 0 2 1,growx");
         
-        Icon addIcon = SwingUtils.getIcon("add.png");
+        Icon addIcon = SwingUtils.getIcon(ADD_ICON);
         addButton = new JButton("Add New Player", addIcon);
         addButton.addActionListener(new ActionListener() {
             @Override

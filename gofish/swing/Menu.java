@@ -35,6 +35,7 @@ public class Menu extends JMenuBar {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                game.stop();
                 game.dispose();
                 System.exit(0);
             }

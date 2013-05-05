@@ -79,7 +79,10 @@ public class GameBoardPanel extends JPanel {
     private class LastClickedListener extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
-            setLastClicked((PlayerPanel) e.getSource());
+            Object source = e.getSource();
+            if (source instanceof PlayerPanel) {
+                setLastClicked((PlayerPanel) source);
+            }
         }
     }
 

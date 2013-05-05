@@ -5,11 +5,13 @@ import gofish.config.XMLConfigFactory;
 import gofish.exception.ConfigValidationException;
 import gofish.model.Player;
 import gofish.swing.SwingGame;
+import gofish.swing.SwingUtils;
 import gofish.swing.player.Computer;
 import gofish.swing.player.Human;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -20,6 +22,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import net.miginfocom.swing.MigLayout;
 
 public class XMLCard extends ConfigCard {
+    
+    final private static String BROWSE_ICON = "folder.png";
     
     private JTextField filenameField;
     
@@ -45,7 +49,8 @@ public class XMLCard extends ConfigCard {
         filenameField.setEditable(false);
         center.add(filenameField, "cell 1 0,growx");
         
-        JButton chooseFileButton = new JButton("Browse...");
+        Icon browseIcon = SwingUtils.getIcon(BROWSE_ICON);
+        JButton chooseFileButton = new JButton("Browse...", browseIcon);
         chooseFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

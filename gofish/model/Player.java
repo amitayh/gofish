@@ -133,7 +133,7 @@ abstract public class Player implements Cloneable {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 29 * hash + this.name.hashCode();
+        hash = 29 * hash + name.hashCode();
         return hash;
     }
 

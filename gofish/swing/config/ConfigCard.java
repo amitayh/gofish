@@ -16,7 +16,7 @@ import javax.swing.border.EmptyBorder;
 
 abstract public class ConfigCard extends JPanel implements ConfigFactory {
     
-    final private static Icon ERROR_ICON = SwingUtils.getIcon("exclamation.png");
+    final private static String ERROR_ICON = "exclamation.png";
     
     protected SwingGame game;
     
@@ -45,10 +45,6 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.TRAILING));
         add(buttonsPanel, BorderLayout.PAGE_END);
         
-        JPanel buttonsBar = new JPanel();
-        buttonsBar.setLayout(new FlowLayout(FlowLayout.TRAILING));
-        buttonsPanel.add(buttonsBar, BorderLayout.CENTER);
-        
         JButton backButton = new JButton("Back");
         backButton.addActionListener(new ActionListener() {
             @Override
@@ -56,9 +52,10 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
                 dialog.showCard(ConfigDialog.MAIN);
             }
         });
-        buttonsBar.add(backButton);
+        buttonsPanel.add(backButton);
         
-        errorLabel = new JLabel(ERROR_ICON);
+        Icon errorIcon = SwingUtils.getIcon(ERROR_ICON);
+        errorLabel = new JLabel(errorIcon);
         errorLabel.setForeground(Color.RED);
         errorLabel.setVisible(false);
         
@@ -71,7 +68,7 @@ abstract public class ConfigCard extends JPanel implements ConfigFactory {
                 game.start(getConfig());
             }
         });
-        buttonsBar.add(startButton);
+        buttonsPanel.add(startButton);
         
         initComponents();
     }

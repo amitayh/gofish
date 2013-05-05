@@ -14,7 +14,7 @@ public class SwingUtils {
     public static void setSystemLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ex) {
+        } catch (Exception e) {
             // Fallback to default
         }
     }
@@ -27,7 +27,7 @@ public class SwingUtils {
     public static Icon getIcon(String name) {
         Icon icon = null;
         String fileName = IMAGES_PATH + name;
-        URL url = CardLabel.class.getClassLoader().getResource(fileName);
+        URL url = SwingUtils.class.getClassLoader().getResource(fileName);
         if (url != null) {
             icon = new ImageIcon(url);
         }

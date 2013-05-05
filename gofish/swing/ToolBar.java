@@ -1,39 +1,38 @@
 package gofish.swing;
 
-import java.awt.FlowLayout;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
 public class ToolBar extends JToolBar {
     
-    final private static Icon NEW_GAME_ICON = SwingUtils.getIcon("page_add.png");
+    final private static String NEW_GAME_ICON = "page_add.png";
     
-    final private static Icon STOP_GAME_ICON = SwingUtils.getIcon("page_delete.png");
+    final private static String STOP_GAME_ICON = "page_delete.png";
     
-    final private static Icon RESTART_GAME_ICON = SwingUtils.getIcon("page_copy.png");
-    
-    final private static int GAP = 5;
+    final private static String RESTART_GAME_ICON = "page_copy.png";
     
     private SwingGame game;
     
     public ToolBar(SwingGame game) {
-        setLayout(new FlowLayout(FlowLayout.LEADING, GAP, GAP));
         this.game = game;
         buildToolbar();
     }
 
     private void buildToolbar() {
+        Icon newGameIcon = SwingUtils.getIcon(NEW_GAME_ICON);
         JButton newGame = new JButton(game.getNewGameAction());
-        newGame.setIcon(NEW_GAME_ICON);
+        newGame.setIcon(newGameIcon);
         add(newGame);
         
+        Icon stopGameIcon = SwingUtils.getIcon(STOP_GAME_ICON);
         JButton stopGame = new JButton(game.getStopGameAction());
-        stopGame.setIcon(STOP_GAME_ICON);
+        stopGame.setIcon(stopGameIcon);
         add(stopGame);
         
+        Icon restartGameIcon = SwingUtils.getIcon(RESTART_GAME_ICON);
         JButton restartGame = new JButton(game.getRestartGameAction());
-        restartGame.setIcon(RESTART_GAME_ICON);
+        restartGame.setIcon(restartGameIcon);
         add(restartGame);
     }
 

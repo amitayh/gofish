@@ -104,7 +104,7 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
             try {
                 gameThread.join();
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                setErrorMessage(e.getMessage());
             }
             gameThread = null;
         }
@@ -131,6 +131,7 @@ public class SwingGame extends JFrame implements GUIRenderer, Runnable {
     @Override
     public void run() {
         try {
+            // Start game thread
             Game game = new Game(this, loadedConfig);
             game.start();
         } catch (Exception e) {

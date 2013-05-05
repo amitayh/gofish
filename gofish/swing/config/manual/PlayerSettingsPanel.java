@@ -27,7 +27,7 @@ public class PlayerSettingsPanel extends JPanel {
     
     private ManualCard parent;
     
-    private JComboBox typeComboBox;
+    private JComboBox<Type> typeComboBox;
     
     private JTextField nameTextField;
     
@@ -67,7 +67,7 @@ public class PlayerSettingsPanel extends JPanel {
     private void initComponents() {
         setLayout(new MigLayout("", "0[][grow][]0", "0[]"));
         
-        typeComboBox = new JComboBox(TYPES);
+        typeComboBox = new JComboBox<>(TYPES);
         add(typeComboBox, "cell 0 0,growx");
         
         nameTextField = new JTextField();
