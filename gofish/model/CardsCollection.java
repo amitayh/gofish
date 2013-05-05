@@ -36,7 +36,6 @@ public class CardsCollection extends AbstractCollection<Card> {
     }
 
     public CardsCollection(Collection<Card> c) {
-        this();
         addAll(c);
     }
     

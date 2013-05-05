@@ -24,7 +24,7 @@ public interface GUIRenderer {
     
     void seriesCompleted(Player player, Series series);
     
-    void goFish(Player player);
+    void goFish(Player playerAsking, Player playerAsked);
     
     void error(String message);
     

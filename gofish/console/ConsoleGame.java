@@ -1,7 +1,7 @@
 package gofish.console;
 
-import gofish.Config;
-import gofish.ConfigFactory;
+import gofish.config.Config;
+import gofish.config.ConfigFactory;
 import gofish.GUIRenderer;
 import gofish.Game;
 import gofish.console.config.ConfigSelector;

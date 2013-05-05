@@ -1,7 +1,7 @@
 package gofish.console.config;
 
-import gofish.Config;
-import gofish.ConfigFactory;
+import gofish.config.Config;
+import gofish.config.ConfigFactory;
 import gofish.console.ConsoleUtils;
 import java.util.Scanner;
 

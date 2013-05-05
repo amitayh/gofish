@@ -83,8 +83,8 @@ public class ConsoleRenderer implements GUIRenderer {
     }
 
     @Override
-    public void goFish(Player player) {
-        System.out.println(player.getName() + " goes fishing\n");
+    public void goFish(Player playerAsking, Player playerAsked) {
+        System.out.println(playerAsked.getName() + " goes fishing\n");
     }
 
     @Override

@@ -2,7 +2,7 @@ package gofish;
 
 import gofish.console.ConsoleGame;
 
-public class GoFish {
+public class ConsoleMain {
 
     public static void main(String[] args) {
         ConsoleGame game = new ConsoleGame();

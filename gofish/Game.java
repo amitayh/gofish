@@ -1,10 +1,12 @@
 package gofish;
 
+import gofish.config.Config;
 import com.google.common.collect.Iterators;
 import gofish.model.CardsCollection;
 import gofish.model.Player;
 import gofish.model.Card;
 import gofish.exception.GameStatusException;
+import gofish.exception.GameStoppedException;
 import gofish.exception.PlayerQueryException;
 import gofish.model.Series;
 import java.util.Collections;
@@ -25,7 +27,7 @@ public class Game {
         
     final public static int MAX_NUM_PLAYERS = 6;
 
-    final public static int MIN_NUM_CARDS = 24;
+    final public static int MIN_NUM_CARDS = 28;
     
     /**
      * Used to determine who's the winner
@@ -67,11 +69,16 @@ public class Game {
         renderer.startGame();
         setAvailableCards();
         
-        // Main game loop
-        loop();
-        
-        // End game
-        end();
+        try {
+            // Main game loop
+            loop();
+            
+            // End game
+            end();
+        } catch (GameStoppedException e) {
+            // Game stopped unexpectedly
+            status = Status.ENDED;
+        }
     }
     
     public void end() {
@@ -93,14 +100,10 @@ public class Game {
         while (iterator.hasNext()) {
             Player player = iterator.next();
             
-            // Play while player has more turns
-            while (playTurn(player)) {
-                continue;
-            }
-            
-            // Check if player is still in the game
-            if (!player.canPlay()) {
-                renderer.playerOut(player);
+            if (player.canPlay()) {
+                playFullTurn(player);
+            } else {
+                // Player is out of the game
                 iterator.remove();
             }
             
@@ -139,30 +142,34 @@ public class Game {
     }
     
     /**
+     * Play a full turn
+     * 
+     * @param player player who's playing
+     */
+    private void playFullTurn(Player player) {
+        while (playSingleTurn(player)) {
+            continue;
+        }
+    }
+    
+    /**
      * Play a single turn
      * 
      * @param player player who's playing
      * @return true if the player gets another turn, false otherwise
      */
-    private boolean playTurn(Player player) {
-        if (player.canPlay()) {
-            renderer.playerTurn(player);
+    private boolean playSingleTurn(Player player) {
+        boolean anotherTurn = false;
+        
+        renderer.playerTurn(player);
+        if (config.getForceShowOfSeries()) {
+            // Reveal completed series
+            renderer.showSeries(player);
+        }
 
-            if (config.getForceShowOfSeries()) {
-                // Reveal completed series
-                renderer.showSeries(player);
-            }
-
+        try {
             // Get player's query (ask for specific player and card)
             Player.Query query = getQuery(player);
-            if (query == null) {
-                // Player is out of the game
-                CardsCollection hand = player.getHand();
-                availableCards.removeAll(hand);
-                hand.clear();
-                return false;
-            }
-
             // Check if player being asked has the requested card
             Player playerAsked = query.getPlayerAsked();
             String cardName = query.getCardName();
@@ -171,29 +178,30 @@ public class Game {
                 // Give away card
                 moveCard(playerAsked, player, card);
                 // Another turn?
-                return config.getAllowMutipleRequests();
+                anotherTurn = config.getAllowMutipleRequests();
             } else {
                 // Go fish
-                renderer.goFish(player);
+                renderer.goFish(player, playerAsked);
             }
+        } catch (PlayerQueryException e) {
+            // Player is out of the game
+            CardsCollection hand = player.getHand();
+            availableCards.removeAll(hand);
+            hand.clear();
         }
-        // Continue to next player
-        return false;
+        
+        return anotherTurn;
     }
     
-    private Player.Query getQuery(Player player) {
-        try {
-            Player.Query query = player.getQuery(this);
-            while (!validateQuery(query)) {
-                // Make sure query is valid
-                renderer.invalidQuery(query);
-                query = player.getQuery(this);
-            }
-            renderer.playerQuery(query);
-            return query;
-        } catch (PlayerQueryException e) {
-            return null;
+    private Player.Query getQuery(Player player) throws PlayerQueryException {
+        Player.Query query = player.getQuery(this);
+        while (!validateQuery(query)) {
+            // Make sure query is valid
+            renderer.invalidQuery(query);
+            query = player.getQuery(this);
         }
+        renderer.playerQuery(query);
+        return query;
     }
     
     private boolean validateQuery(Player.Query query) {
@@ -215,24 +223,31 @@ public class Game {
     }
     
     private void moveCard(Player from, Player to, Card card) {
-        renderer.moveCard(from, to, card);
         from.removeCard(card);
+        checkPlayer(from);
         Series series = to.addCard(card);
+        renderer.moveCard(from, to, card);
         if (series != null) {
             // Card completed a series
             availableCards.removeAll(series.getCards());
             renderer.seriesCompleted(to, series);
+            checkPlayer(to);
+        }
+    }
+    
+    private void checkPlayer(Player player) {
+        if (!player.canPlay()) {
+            // No cards left - player is out
+            renderer.playerOut(player);
         }
     }
     
     private static class PlayerSeriesComparator implements Comparator<Player> {
-        
         @Override
         public int compare(Player p1, Player p2) {
             // Compare players by number of completed series
             return p1.getCompleteSeries().size() - p2.getCompleteSeries().size();
         }
-        
     }
 
 }

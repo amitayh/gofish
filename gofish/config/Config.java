@@ -1,5 +1,6 @@
-package gofish;
+package gofish.config;
 
+import gofish.Game;
 import gofish.exception.CardCollisionException;
 import gofish.exception.ConfigValidationException;
 import gofish.exception.PlayerCollisionException;

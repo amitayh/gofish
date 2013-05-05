@@ -1,4 +1,4 @@
-package gofish;
+package gofish.config;
 
 public interface ConfigFactory {
     
